@@ -114,6 +114,18 @@ struct WindowHandlesResponse
     }
 }
 
+struct WindowHandleResponse
+{
+    mixin JsonizeMe;
+
+    @jsonize
+    {
+        string sessionId;
+        int status;
+        string value;
+    }
+}
+
 struct WindowHandle
 {
     mixin JsonizeMe;
@@ -160,4 +172,50 @@ struct ElementResponses
     }
 }
 
+struct ServerStatusResponse
+{
+    mixin JsonizeMe;
 
+    @jsonize
+    {
+        string sessionId;
+        int status;
+        ServerStatus value;
+    }
+}
+
+struct ServerStatus
+{
+    mixin JsonizeMe;
+
+    @jsonize
+    {
+        string[string] build;
+        string[string] os;
+    }
+
+}
+
+struct RequestTimeout
+{
+    mixin JsonizeMe;
+
+    @jsonize
+    {
+        string type;
+        int ms;
+    }
+
+}
+
+struct RequestTimeoutValue
+{
+
+    mixin JsonizeMe;
+
+    @jsonize
+    {
+        int ms;
+    }
+
+}

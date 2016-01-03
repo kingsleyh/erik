@@ -33,18 +33,8 @@
       <file leaf-file-name="api.d" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/source/remote/api.d">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.1346154" vertical-offset="3684" max-vertical-offset="4395">
-              <caret line="281" column="85" selection-start-line="281" selection-start-column="18" selection-end-line="281" selection-end-column="18" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="driver.d" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/source/remote/driver.d">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="965" max-vertical-offset="1800">
-              <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.5782313" vertical-offset="4275" max-vertical-offset="7170">
+              <caret line="302" column="140" selection-start-line="302" selection-start-column="36" selection-end-line="302" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -53,8 +43,8 @@
       <file leaf-file-name="model.d" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/source/remote/model.d">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2094" max-vertical-offset="2535">
-              <caret line="162" column="0" selection-start-line="162" selection-start-column="0" selection-end-line="162" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1524" max-vertical-offset="3405">
+              <caret line="124" column="14" selection-start-line="124" selection-start-column="14" selection-end-line="124" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -606,10 +596,17 @@
       <workItem from="1451763464503" duration="6880000" />
       <workItem from="1451807739647" duration="5407000" />
     </task>
+    <task id="LOCAL-00001" summary="added more of the API">
+      <created>1451820099573</created>
+      <option name="number" value="00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1451820099573</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="48588000" />
+    <option name="totallyTimeSpent" value="53664000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="829" extended-state="0" />
@@ -635,7 +632,7 @@
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="PsiViewer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3653586" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39377537" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32825485" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17811158" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -662,6 +659,8 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
+    <MESSAGE value="added more of the API" />
+    <option name="LAST_COMMIT_MESSAGE" value="added more of the API" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -773,26 +772,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/source/remote/driver.d">
+    <entry file="file://$PROJECT_DIR$/source/remote/model.d">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="965" max-vertical-offset="1800">
-          <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1524" max-vertical-offset="3405">
+          <caret line="124" column="14" selection-start-line="124" selection-start-column="14" selection-end-line="124" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/source/remote/model.d">
+    <entry file="file://$PROJECT_DIR$/source/remote/driver.d">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2094" max-vertical-offset="2535">
-          <caret line="162" column="0" selection-start-line="162" selection-start-column="0" selection-end-line="162" selection-end-column="0" />
+        <state vertical-scroll-proportion="1.0642858" vertical-offset="813" max-vertical-offset="1800">
+          <caret line="84" column="6" selection-start-line="84" selection-start-column="5" selection-end-line="84" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/source/remote/api.d">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.1346154" vertical-offset="3684" max-vertical-offset="4395">
-          <caret line="281" column="85" selection-start-line="281" selection-start-column="18" selection-end-line="281" selection-end-column="18" />
+        <state vertical-scroll-proportion="0.5782313" vertical-offset="4275" max-vertical-offset="7170">
+          <caret line="302" column="140" selection-start-line="302" selection-start-column="36" selection-end-line="302" selection-end-column="36" />
           <folding />
         </state>
       </provider>

@@ -17,18 +17,23 @@ void main(string[] args)
 {
 
     Session session = new Session("http://localhost", 8910);
-    session.create();
+    session.goForward();
+
+    //    session.setTimeout(TimeoutType.IMPLICIT, 2000);
+    //    session.setAsyncScriptTimeout(2000);
+    //    session.getStatus();
+    //    session.create();
     //    session.getCapabilities();
     //    writeln(session.sessionId);
 
     //    writeln(session.getSessions());
 
     //    session.getWindowHandles();
-    session.visitUrl("http://www.autotrader.co.uk");
+    //    session.visitUrl("http://www.autotrader.co.uk");
     //    Element ele = session.findElement(LocatorStrategy.ID, "home");
     //    Element ele = session.findElements(LocatorStrategy.CLASS_NAME, "mainNav-menu__item");
-    Element[] eles = session.findElements(LocatorStrategy.CLASS_NAME, "mainNav-menu__item");
-    writeln(eles[2].getText());
+    //    Element[] eles = session.findElements(LocatorStrategy.CLASS_NAME, "mainNav-menu__item");
+    //    writeln(eles[2].getText());
     //    writeln(ele.elementId);
     //    writeln(ele.getText());
     //    session.getTitle();
@@ -71,6 +76,7 @@ class Session
         this.host = host;
         this.port = port;
         this.driver = new Driver(host, port);
+        create();
     }
 
     /* Session
@@ -84,7 +90,7 @@ class Session
    Potential Errors:
         SessionNotCreatedException - If a required capability could not be set.
    */
-    public Session create()
+    private void create()
     {
         auto sessionDetails = RequestSession(Capabilities("phantomjs", "",
             "MAC"), Capabilities("phantomjs", "", "MAC"));
@@ -96,7 +102,6 @@ class Session
         this.sessionId = json["sessionId"].str;
         this.sessionUrl = "/session/" ~ sessionId;
         log!(__FUNCTION__).info("creating new session with id: " ~ sessionId);
-        return this;
     }
 
     /* /sessions
@@ -121,6 +126,32 @@ class Session
     }
 
     /*
+    Query the server's current status. The server should respond with a general "HTTP 200 OK" response if it is alive and accepting commands. The response body should be a JSON object describing the state of the server. All server implementations should return two basic objects describing the server's current platform and when the server was built. All fields are optional; if omitted, the client should assume the value is uknown. Furthermore, server implementations may include additional fields not listed here.
+
+    Key	                Type	    Description
+    ----------------------------------------------
+    build	            object
+    build.version	    string	    A generic release label (i.e. "2.0rc3")
+    build.revision	    string	    The revision of the local source control client from which the server was built
+    build.time	        string	    A timestamp from when the server was built.
+    os	                object
+    os.arch	            string	    The current system architecture.
+    os.name	            string	    The name of the operating system the server is currently running on: "windows", "linux", etc.
+    os.version      	string	    The operating system version.
+
+    Returns:
+        {object} An object describing the general status of the server.
+    */
+    public ServerStatus getStatus()
+    {
+        string url = "/status";
+        HttpResponse response = driver.doGet(url);
+        handleFailedRequest(url, response);
+        ServerStatusResponse serverStatusResponse = parseJSON(response.content).fromJSON!ServerStatusResponse;
+        return serverStatusResponse.value;
+    }
+
+    /*
     GET /session/:sessionId
         Retrieve the capabilities of the specified session.
     URL Parameters:
@@ -136,6 +167,12 @@ class Session
         return capabilityResponse.value;
     }
 
+    /*
+    DELETE /session/:sessionId
+        Delete the session.
+    URL Parameters:
+        :sessionId - ID of the session to route the command to.
+    */
     public void dispose()
     {
         HttpResponse response = driver.doDelete(sessionUrl);
@@ -159,6 +196,15 @@ class Session
         handleFailedRequest(sessionUrl, response);
     }
 
+    /*
+    /session/:sessionId/window_handles
+    GET /session/:sessionId/window_handles
+        Retrieve the list of all window handles available to the session.
+    URL Parameters:
+        :sessionId - ID of the session to route the command to.
+    Returns:
+        {Array.<string>} A list of window handles.
+    */
     public WindowHandle[] getWindowHandles()
     {
         HttpResponse response = driver.doGet(sessionUrl ~ "/window_handles");
@@ -167,13 +213,86 @@ class Session
         return windowHandlesResponse.value.map!(id => WindowHandle(id)).array;
     }
 
+    /*
+    /session/:sessionId/window_handle
+    GET /session/:sessionId/window_handle
+        Retrieve the current window handle.
+    URL Parameters:
+        :sessionId - ID of the session to route the command to.
+    Returns:
+        {string} The current window handle.
+    Potential Errors:
+        NoSuchWindow - If the currently selected window has been closed.
+    */
+    public WindowHandle getWindowHandle()
+    {
+        HttpResponse response = driver.doGet(sessionUrl ~ "/window_handle");
+        handleFailedRequest(sessionUrl, response);
+        WindowHandleResponse windowHandleResponse = parseJSON(response.content).fromJSON!WindowHandleResponse;
+        return WindowHandle(windowHandleResponse.value);
+    }
+
+    /*
+    /session/:sessionId/url
+    GET /session/:sessionId/url
+        Retrieve the URL of the current page.
+    URL Parameters:
+        :sessionId - ID of the session to route the command to.
+    Returns:
+        {string} The current URL.
+    Potential Errors:
+        NoSuchWindow - If the currently selected window has been closed.
+    */
     public string getUrl()
     {
         HttpResponse response = driver.doGet(sessionUrl ~ "/url");
         handleFailedRequest(sessionUrl, response);
-        writeln(response);
         StringResponse stringResponse = parseJSON(response.content).fromJSON!StringResponse;
         return stringResponse.value;
+    }
+
+    /*
+    /session/:sessionId/forward
+    POST /session/:sessionId/forward
+        Navigate forwards in the browser history, if possible.
+    URL Parameters:
+        :sessionId - ID of the session to route the command to.
+    Potential Errors:
+        NoSuchWindow - If the currently selected window has been closed.
+    */
+    public void goForward()
+    {
+        HttpResponse response = driver.doPost(sessionUrl ~ "/forward", parseJSON("{}"));
+        handleFailedRequest(sessionUrl, response);
+    }
+
+    /*
+  /session/:sessionId/back
+  POST /session/:sessionId/back
+      Navigate backwards in the browser history, if possible.
+  URL Parameters:
+      :sessionId - ID of the session to route the command to.
+  Potential Errors:
+      NoSuchWindow - If the currently selected window has been closed.
+  */
+    public void goBack()
+    {
+        HttpResponse response = driver.doPost(sessionUrl ~ "/back", parseJSON("{}"));
+        handleFailedRequest(sessionUrl, response);
+    }
+
+    /*
+    /session/:sessionId/refresh
+    POST /session/:sessionId/refresh
+        Refresh the current page.
+    URL Parameters:
+        :sessionId - ID of the session to route the command to.
+    Potential Errors:
+        NoSuchWindow - If the currently selected window has been closed.*/
+    public void refresh()
+    {
+        HttpResponse response = driver.doPost(sessionUrl ~ "/refresh", parseJSON("{}"));
+        handleFailedRequest(sessionUrl, response);
     }
 
     public string getSource()
@@ -190,6 +309,65 @@ class Session
         handleFailedRequest(sessionUrl, response);
         StringResponse stringResponse = parseJSON(response.content).fromJSON!StringResponse;
         return stringResponse.value;
+    }
+
+    /*
+    /session/:sessionId/timeouts
+    POST /session/:sessionId/timeouts
+        Configure the amount of time that a particular type of operation can execute for before they are aborted and a |Timeout| error is returned to the client.
+    URL Parameters:
+        :sessionId - ID of the session to route the command to.
+    JSON Parameters:
+        type - {string} The type of operation to set the timeout for. Valid values are: "script" for script timeouts, "implicit" for modifying the implicit wait timeout and "page load" for setting a page load timeout.
+        ms - {number} The amount of time, in milliseconds, that time-limited commands are permitted to run.
+    */
+    public void setTimeout(TimeoutType timeoutType, int milliseconds)
+    {
+        string _timeoutType = timeoutType;
+        auto timeoutDetails = RequestTimeout(_timeoutType, milliseconds);
+        JSONValue timeoutData = toJSON!RequestTimeout(timeoutDetails);
+
+        HttpResponse response = driver.doPost(sessionUrl ~ "/timeouts", timeoutData);
+        handleFailedRequest(sessionUrl, response);
+    }
+
+    /*
+    /session/:sessionId/timeouts/async_script
+    POST /session/:sessionId/timeouts/async_script
+        Set the amount of time, in milliseconds, that asynchronous scripts executed by /session/:sessionId/execute_async are permitted to run before they are aborted and a |Timeout| error is returned to the client.
+    URL Parameters:
+        :sessionId - ID of the session to route the command to.
+    JSON Parameters:
+        ms - {number} The amount of time, in milliseconds, that time-limited commands are permitted to run.
+    */
+    public void setAsyncScriptTimeout(int milliseconds)
+    {
+        auto timeoutDetails = RequestTimeoutValue(milliseconds);
+        JSONValue timeoutData = toJSON!RequestTimeoutValue(timeoutDetails);
+
+        HttpResponse response = driver.doPost(sessionUrl ~ "/timeouts/async_script",
+            timeoutData);
+        handleFailedRequest(sessionUrl, response);
+    }
+
+    /*
+    POST /session/:sessionId/timeouts/implicit_wait
+        Set the amount of time the driver should wait when searching for elements. When searching for a single element, the driver should poll the page until an element is found or the timeout expires, whichever occurs first. When searching for multiple elements, the driver should poll the page until at least one element is found or the timeout expires, at which point it should return an empty list.
+        If this command is never sent, the driver should default to an implicit wait of 0ms.
+
+    URL Parameters:
+        :sessionId - ID of the session to route the command to.
+    JSON Parameters:
+        ms - {number} The amount of time to wait, in milliseconds. This value has a lower bound of 0.
+    */
+    public void setImplicitWaitTimeout(int milliseconds)
+    {
+        auto timeoutDetails = RequestTimeoutValue(milliseconds);
+        JSONValue timeoutData = toJSON!RequestTimeoutValue(timeoutDetails);
+
+        HttpResponse response = driver.doPost(sessionUrl ~ "/timeouts/implicit_wait",
+            timeoutData);
+        handleFailedRequest(sessionUrl, response);
     }
 
     /*
@@ -284,4 +462,11 @@ enum LocatorStrategy : string
     PARTIAL_LINK_TEXT = "partial link text",
     TAG_NAME = "tag name",
     XPATH = "xpath"
+}
+
+enum TimeoutType : string
+{
+    SCRIPT = "script",
+    IMPLICIT = "implicit",
+    PAGE_LOAD = "page load"
 }
