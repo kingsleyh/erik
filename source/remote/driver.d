@@ -3,7 +3,16 @@ module remote.driver;
 import remote.model;
 import std.json;
 import std.conv;
+import std.stdio;
 import std.net.curl;
+
+class DriverError : Exception
+{
+    this(string msg)
+    {
+        super(msg);
+    }
+}
 
 class Driver
 {
@@ -36,8 +45,15 @@ class Driver
             responseCode = status.code;
         };
 
-        client.perform();
-        return HttpResponse(responseCode, to!string(responseBody));
+        try
+        {
+            client.perform();
+            return HttpResponse(responseCode, to!string(responseBody));
+        }
+        catch (Exception e)
+        {
+            throw new DriverError("Error: " ~ e.msg);
+        }
     }
 
     public HttpResponse doPost(string url, JSONValue value)
@@ -57,8 +73,15 @@ class Driver
             responseCode = status.code;
         };
 
-        client.perform();
-        return HttpResponse(responseCode, to!string(responseBody));
+        try
+        {
+            client.perform();
+            return HttpResponse(responseCode, to!string(responseBody));
+        }
+        catch (Exception e)
+        {
+            throw new DriverError("Error: " ~ e.msg);
+        }
     }
 
     public HttpResponse doDelete(string url)
@@ -78,7 +101,14 @@ class Driver
             responseCode = status.code;
         };
 
-        client.perform();
-        return HttpResponse(responseCode, to!string(responseBody));
+        try
+        {
+            client.perform();
+            return HttpResponse(responseCode, to!string(responseBody));
+        }
+        catch (Exception e)
+        {
+            throw new DriverError("Error: " ~ e.msg);
+        }
     }
 }

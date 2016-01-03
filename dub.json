@@ -5,6 +5,7 @@
   "authors": ["kings"],
   "targetType": "executable",
   "dependencies": {
-    "jsonizer": "~>0.5.2"
+    "jsonizer": "~>0.5.2",
+    "rainbow":"~master"
   }
 }

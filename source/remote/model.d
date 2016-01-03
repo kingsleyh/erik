@@ -10,26 +10,13 @@ struct RequestSession
 
     @jsonize
     {
-        DesiredCapabilities desiredCapabilities;
-        RequiredCapabilities requiredCapabilities;
+        Capabilities desiredCapabilities;
+        Capabilities requiredCapabilities;
     }
 
 }
 
-struct DesiredCapabilities
-{
-    mixin JsonizeMe;
-
-    @jsonize
-    {
-        string browserName;
-        string platform;
-    }
-    @jsonize("version") string _version;
-
-}
-
-struct RequiredCapabilities
+struct Capabilities
 {
     mixin JsonizeMe;
 
@@ -78,4 +65,39 @@ struct NewSessionResponse
         string sessionId;
     }
 
+}
+
+struct SessionsResponse
+{
+    mixin JsonizeMe;
+
+    @jsonize
+    {
+        string sessionId;
+        int status;
+        Sessions[] value;
+    }
+}
+
+struct Sessions
+{
+    mixin JsonizeMe;
+
+    @jsonize
+    {
+        string id;
+        Capabilities capabilities;
+    }
+}
+
+struct CapabilityResponse
+{
+    mixin JsonizeMe;
+
+    @jsonize
+    {
+        string sessionId;
+        int status;
+        Capabilities value;
+    }
 }

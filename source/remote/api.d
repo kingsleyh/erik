@@ -10,17 +10,22 @@ import std.array;
 
 import remote.model;
 import remote.driver;
+import logger;
 
 void main(string[] args)
 {
 
     Session session = new Session("http://localhost", 8910);
     session.create();
-    writeln(session.sessionId);
-//    writeln(session.getWindowHandles().content);
-    writeln(session.visitUrl("http://www.autotrader.co.uk"));
-        writeln(session.findElement(LocatorStrategy.ID, "coverImage"));
-    writeln(session.getTitle().content);
+//    session.getCapabilities();
+    //    writeln(session.sessionId);
+
+    //    writeln(session.getSessions());
+
+    //    writeln(session.getWindowHandles().content);
+        session.visitUrl("http://www.autotrader.co.uk");
+    //        writeln(session.findElement(LocatorStrategy.ID, "coverImage"));
+        writeln(session.getTitle().content);
     //    writeln(session.getSource().content);
     session.dispose();
 
@@ -55,8 +60,8 @@ class Session
    */
     public Session create()
     {
-        auto sessionDetails = RequestSession(DesiredCapabilities("phantomjs",
-            "", "MAC"), RequiredCapabilities("phantomjs", "", "MAC"));
+        auto sessionDetails = RequestSession(Capabilities("phantomjs", "",
+            "MAC"), Capabilities("phantomjs", "", "MAC"));
         JSONValue sessionData = toJSON!RequestSession(sessionDetails);
 
         HttpResponse response = driver.doPost("/session", sessionData);
@@ -64,7 +69,7 @@ class Session
         auto json = parseJSON(response.content);
         this.sessionId = json["sessionId"].str;
         this.sessionUrl = "/session/" ~ sessionId;
-        writeln("creating new session: ", sessionId);
+        log!(__FUNCTION__).info("creating new session with id: " ~ sessionId);
         return this;
     }
 
@@ -80,9 +85,31 @@ class Session
     Returns:
         {Array.<Object>} A list of the currently active sessions.
     */
-    public HttpResponse getSessions()
+    public Sessions[] getSessions()
     {
-        return driver.doGet("/sessions");
+        string url = "/sessions";
+        HttpResponse response = driver.doGet(url);
+        handleFailedRequest(url, response);
+        SessionsResponse sessionResponse = parseJSON(response.content).fromJSON!SessionsResponse;
+        return sessionResponse.value;
+    }
+
+    private void handleFailedRequest(string url, HttpResponse response)
+    {
+        if (response.code != 200)
+        {
+            throw new APIResponseError(
+                "request for " ~ url ~ " returned failed error code: " ~ to!string(response.code) ~ " with message: " ~ response
+                .content);
+        }
+    }
+
+    class APIResponseError : Exception
+    {
+        this(string msg)
+        {
+            super(msg);
+        }
     }
 
     /*
@@ -93,14 +120,19 @@ class Session
     Returns:
         {object} An object describing the session's capabilities.
     */
-    public HttpResponse getCapabilities()
+    public Capabilities getCapabilities()
     {
-        return driver.doGet(sessionUrl);
+        HttpResponse response = driver.doGet(sessionUrl);
+        handleFailedRequest(sessionUrl, response);
+        writeln(response);
+        CapabilityResponse capabilityResponse = parseJSON(response.content).fromJSON!CapabilityResponse;
+        return capabilityResponse.value;
     }
 
-    public HttpResponse dispose()
+    public void dispose()
     {
-        return driver.doDelete(sessionUrl);
+        HttpResponse response = driver.doDelete(sessionUrl);
+        handleFailedRequest(sessionUrl, response);
     }
 
     /*
@@ -117,6 +149,7 @@ class Session
     {
         JSONValue apiUrl = toJSON!RequestUrl(RequestUrl(url));
         HttpResponse response = driver.doPost(sessionUrl ~ "/url", apiUrl);
+        writeln(response);
         return response;
     }
 
