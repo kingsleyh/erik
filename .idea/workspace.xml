@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d336738e-2169-49a5-95f5-342bfeba06d8" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/erik" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/erik" afterPath="$PROJECT_DIR$/erik" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/remote/api.d" afterPath="$PROJECT_DIR$/source/remote/api.d" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/remote/model.d" afterPath="$PROJECT_DIR$/source/remote/model.d" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="erik.iws" />
@@ -33,8 +32,8 @@
       <file leaf-file-name="api.d" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/source/remote/api.d">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.29705215" vertical-offset="5884" max-vertical-offset="7740">
-              <caret line="401" column="44" selection-start-line="401" selection-start-column="44" selection-end-line="401" selection-end-column="44" />
+            <state vertical-scroll-proportion="0.47619048" vertical-offset="255" max-vertical-offset="7935">
+              <caret line="31" column="10" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -614,11 +613,17 @@
       <option name="project" value="LOCAL" />
       <updated>1451842707254</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="added more of the API">
+      <created>1451858407611</created>
+      <option name="number" value="00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1451858407611</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="61273000" />
+    <option name="totallyTimeSpent" value="64985000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="829" extended-state="0" />
@@ -803,8 +808,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/source/remote/api.d">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.29705215" vertical-offset="5884" max-vertical-offset="7740">
-          <caret line="401" column="44" selection-start-line="401" selection-start-column="44" selection-end-line="401" selection-end-column="44" />
+        <state vertical-scroll-proportion="0.47619048" vertical-offset="255" max-vertical-offset="7935">
+          <caret line="31" column="10" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
           <folding />
         </state>
       </provider>

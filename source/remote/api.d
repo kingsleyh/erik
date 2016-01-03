@@ -27,7 +27,9 @@ void main(string[] args)
     session.visitUrl("http://www.autotrader.co.uk");
     string title = session.getTitle();
     writeln(title);
-    session.takeScreenshot();
+//    session.takeScreenshot();
+//    Element ele = session.getActiveElement();
+
     //    session.goForward();
 
     //    session.setTimeout(TimeoutType.IMPLICIT, 2000);
@@ -399,12 +401,12 @@ class Session
         writeln(response);
     }
 
-    public string takeScreenshot(string file)
+    public string takeScreenshot(string outputFile = "screenshot.png")
     {
         HttpResponse response = driver.doGet(sessionUrl ~ "/screenshot");
         handleFailedRequest(sessionUrl, response);
         StringResponse stringResponse = parseJSON(response.content).fromJSON!StringResponse;
-        std.file.write("screenshot.png", Base64.decode(stringResponse.value));
+        std.file.write(outputFile, Base64.decode(stringResponse.value));
         return stringResponse.value;
     }
 
@@ -460,6 +462,17 @@ class Session
         ElementResponses elementResponses = parseJSON(response.content).fromJSON!ElementResponses;
         return elementResponses.value.map!(e => new Element(e["ELEMENT"],
             sessionId, sessionUrl, driver)).array;
+    }
+
+    // why does this return "active" intead of an element?
+    public Element getActiveElement()
+    {
+        string elementUrl = sessionUrl ~ "/element/active";
+        HttpResponse response = driver.doGet(elementUrl);
+        handleFailedRequest(elementUrl, response);
+        ElementResponse elementResponse = parseJSON(response.content).fromJSON!ElementResponse;
+        string elementId = elementResponse.value["ELEMENT"];
+        return new Element(elementId, sessionId, sessionUrl, driver);
     }
 
 }
