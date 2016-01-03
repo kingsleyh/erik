@@ -7,6 +7,7 @@ import jsonizer.jsonize;
 import std.json;
 import std.stdio;
 import std.array;
+import std.algorithm;
 
 import remote.model;
 import remote.driver;
@@ -17,18 +18,43 @@ void main(string[] args)
 
     Session session = new Session("http://localhost", 8910);
     session.create();
-//    session.getCapabilities();
+    //    session.getCapabilities();
     //    writeln(session.sessionId);
 
     //    writeln(session.getSessions());
 
-    //    writeln(session.getWindowHandles().content);
-        session.visitUrl("http://www.autotrader.co.uk");
-    //        writeln(session.findElement(LocatorStrategy.ID, "coverImage"));
-        writeln(session.getTitle().content);
+    //    session.getWindowHandles();
+    session.visitUrl("http://www.autotrader.co.uk");
+    //    Element ele = session.findElement(LocatorStrategy.ID, "home");
+    //    Element ele = session.findElements(LocatorStrategy.CLASS_NAME, "mainNav-menu__item");
+    Element[] eles = session.findElements(LocatorStrategy.CLASS_NAME, "mainNav-menu__item");
+    writeln(eles[2].getText());
+    //    writeln(ele.elementId);
+    //    writeln(ele.getText());
+    //    session.getTitle();
+    //    session.getUrl();
+    //    session.getSource();
     //    writeln(session.getSource().content);
     session.dispose();
 
+}
+
+void handleFailedRequest(string url, HttpResponse response)
+{
+    if (response.code != 200)
+    {
+        throw new APIResponseError(
+            "request for " ~ url ~ " returned failed error code: " ~ to!string(response.code) ~ " with message: " ~ response
+            .content);
+    }
+}
+
+class APIResponseError : Exception
+{
+    this(string msg)
+    {
+        super(msg);
+    }
 }
 
 class Session
@@ -94,24 +120,6 @@ class Session
         return sessionResponse.value;
     }
 
-    private void handleFailedRequest(string url, HttpResponse response)
-    {
-        if (response.code != 200)
-        {
-            throw new APIResponseError(
-                "request for " ~ url ~ " returned failed error code: " ~ to!string(response.code) ~ " with message: " ~ response
-                .content);
-        }
-    }
-
-    class APIResponseError : Exception
-    {
-        this(string msg)
-        {
-            super(msg);
-        }
-    }
-
     /*
     GET /session/:sessionId
         Retrieve the capabilities of the specified session.
@@ -124,7 +132,6 @@ class Session
     {
         HttpResponse response = driver.doGet(sessionUrl);
         handleFailedRequest(sessionUrl, response);
-        writeln(response);
         CapabilityResponse capabilityResponse = parseJSON(response.content).fromJSON!CapabilityResponse;
         return capabilityResponse.value;
     }
@@ -145,32 +152,44 @@ class Session
     Potential Errors:
         NoSuchWindow - If the currently selected window has been closed.
     */
-    public HttpResponse visitUrl(string url)
+    public void visitUrl(string url)
     {
         JSONValue apiUrl = toJSON!RequestUrl(RequestUrl(url));
         HttpResponse response = driver.doPost(sessionUrl ~ "/url", apiUrl);
+        handleFailedRequest(sessionUrl, response);
+    }
+
+    public WindowHandle[] getWindowHandles()
+    {
+        HttpResponse response = driver.doGet(sessionUrl ~ "/window_handles");
+        handleFailedRequest(sessionUrl, response);
+        WindowHandlesResponse windowHandlesResponse = parseJSON(response.content).fromJSON!WindowHandlesResponse;
+        return windowHandlesResponse.value.map!(id => WindowHandle(id)).array;
+    }
+
+    public string getUrl()
+    {
+        HttpResponse response = driver.doGet(sessionUrl ~ "/url");
+        handleFailedRequest(sessionUrl, response);
         writeln(response);
-        return response;
+        StringResponse stringResponse = parseJSON(response.content).fromJSON!StringResponse;
+        return stringResponse.value;
     }
 
-    public HttpResponse getWindowHandles()
+    public string getSource()
     {
-        return driver.doGet(sessionUrl ~ "/window_handles");
+        HttpResponse response = driver.doGet(sessionUrl ~ "/source");
+        handleFailedRequest(sessionUrl, response);
+        StringResponse stringResponse = parseJSON(response.content).fromJSON!StringResponse;
+        return stringResponse.value;
     }
 
-    public HttpResponse getUrl()
+    public string getTitle()
     {
-        return driver.doGet(sessionUrl ~ "/url");
-    }
-
-    public HttpResponse getSource()
-    {
-        return driver.doGet(sessionUrl ~ "/source");
-    }
-
-    public HttpResponse getTitle()
-    {
-        return driver.doGet(sessionUrl ~ "/title");
+        HttpResponse response = driver.doGet(sessionUrl ~ "/title");
+        handleFailedRequest(sessionUrl, response);
+        StringResponse stringResponse = parseJSON(response.content).fromJSON!StringResponse;
+        return stringResponse.value;
     }
 
     /*
@@ -203,13 +222,28 @@ class Session
         NoSuchElement - If the element cannot be found.
         XPathLookupError - If using XPath and the input expression is invalid.
     */
-    public HttpResponse findElement(LocatorStrategy strategy, string value)
+    public Element findElement(LocatorStrategy strategy, string value)
     {
         string _strategy = strategy;
         JSONValue apiElement = toJSON!RequestFindElement(RequestFindElement(_strategy,
             value));
         HttpResponse response = driver.doPost(sessionUrl ~ "/element", apiElement);
-        return response;
+        handleFailedRequest(sessionUrl, response);
+        ElementResponse elementResponse = parseJSON(response.content).fromJSON!ElementResponse;
+        string elementId = elementResponse.value["ELEMENT"];
+        return new Element(elementId, sessionId, sessionUrl, driver);
+    }
+
+    public Element[] findElements(LocatorStrategy strategy, string value)
+    {
+        string _strategy = strategy;
+        JSONValue apiElement = toJSON!RequestFindElement(RequestFindElement(_strategy,
+            value));
+        HttpResponse response = driver.doPost(sessionUrl ~ "/elements", apiElement);
+        handleFailedRequest(sessionUrl, response);
+        ElementResponses elementResponses = parseJSON(response.content).fromJSON!ElementResponses;
+        return elementResponses.value.map!(e => new Element(e["ELEMENT"],
+            sessionId, sessionUrl, driver)).array;
     }
 
 }
@@ -218,10 +252,24 @@ class Element
 {
 
     string elementId;
+    Driver driver;
+    string sessionId;
+    string sessionUrl;
 
-    this(string elementId)
+    this(string elementId, string sessionId, string sessionUrl, Driver driver)
     {
         this.elementId = elementId;
+        this.sessionId = sessionId;
+        this.sessionUrl = sessionUrl ~ "/element/" ~ elementId;
+        this.driver = driver;
+    }
+
+    public string getText()
+    {
+        HttpResponse response = driver.doGet(sessionUrl ~ "/text");
+        handleFailedRequest(sessionUrl, response);
+        StringResponse stringResponse = parseJSON(response.content).fromJSON!StringResponse;
+        return stringResponse.value;
     }
 
 }

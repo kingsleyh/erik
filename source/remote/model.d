@@ -101,3 +101,63 @@ struct CapabilityResponse
         Capabilities value;
     }
 }
+
+struct WindowHandlesResponse
+{
+    mixin JsonizeMe;
+
+    @jsonize
+    {
+        string sessionId;
+        int status;
+        string[] value;
+    }
+}
+
+struct WindowHandle
+{
+    mixin JsonizeMe;
+
+    @jsonize
+    {
+        string handleId;
+    }
+}
+
+struct StringResponse
+{
+    mixin JsonizeMe;
+
+    @jsonize
+    {
+        string sessionId;
+        int status;
+        string value;
+    }
+}
+
+struct ElementResponse
+{
+    mixin JsonizeMe;
+
+    @jsonize
+    {
+        string sessionId;
+        int status;
+        string[string] value;
+    }
+}
+
+struct ElementResponses
+{
+    mixin JsonizeMe;
+
+    @jsonize
+    {
+        string sessionId;
+        int status;
+        string[string][] value;
+    }
+}
+
+
