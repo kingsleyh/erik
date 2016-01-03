@@ -13,6 +13,8 @@ import std.json;
 import std.stdio;
 import std.array;
 import std.algorithm;
+import std.file;
+import std.base64;
 
 import remote.model;
 import remote.driver;
@@ -22,7 +24,11 @@ void main(string[] args)
 {
 
     Session session = new Session("http://localhost", 8910);
-    session.goForward();
+    session.visitUrl("http://www.autotrader.co.uk");
+    string title = session.getTitle();
+    writeln(title);
+    session.takeScreenshot();
+    //    session.goForward();
 
     //    session.setTimeout(TimeoutType.IMPLICIT, 2000);
     //    session.setAsyncScriptTimeout(2000);
@@ -371,6 +377,35 @@ class Session
         HttpResponse response = driver.doPost(sessionUrl ~ "/timeouts/implicit_wait",
             timeoutData);
         handleFailedRequest(sessionUrl, response);
+    }
+
+    public void executeScript(string func, string[] args)
+    {
+        auto executeDetails = RequestExecuteScript(func, args);
+        JSONValue executeData = toJSON!RequestExecuteScript(executeDetails);
+        writeln(executeData);
+        HttpResponse response = driver.doPost(sessionUrl ~ "/execute", executeData);
+        handleFailedRequest(sessionUrl, response);
+        writeln(response);
+    }
+
+    public void executeAsyncScript(string func, string[] args)
+    {
+        auto executeDetails = RequestExecuteScript(func, args);
+        JSONValue executeData = toJSON!RequestExecuteScript(executeDetails);
+        writeln(executeData);
+        HttpResponse response = driver.doPost(sessionUrl ~ "/execute_async", executeData);
+        handleFailedRequest(sessionUrl, response);
+        writeln(response);
+    }
+
+    public string takeScreenshot(string file)
+    {
+        HttpResponse response = driver.doGet(sessionUrl ~ "/screenshot");
+        handleFailedRequest(sessionUrl, response);
+        StringResponse stringResponse = parseJSON(response.content).fromJSON!StringResponse;
+        std.file.write("screenshot.png", Base64.decode(stringResponse.value));
+        return stringResponse.value;
     }
 
     /*

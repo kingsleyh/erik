@@ -219,3 +219,17 @@ struct RequestTimeoutValue
     }
 
 }
+
+struct RequestExecuteScript
+{
+
+    mixin JsonizeMe;
+
+    @jsonize
+    {
+        string script;
+        string[] args;
+    }
+
+}
+
