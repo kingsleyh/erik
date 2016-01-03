@@ -1,3 +1,8 @@
+/**
+D PhantomJS Driver
+
+A simple wrapper around the JSON Wire Protocol used by GhostDriver
+ */
 module remote.api;
 
 import jsonizer.fromjson;
@@ -62,6 +67,12 @@ class APIResponseError : Exception
     }
 }
 
+/**
+ * Session:
+ * --------------------
+ *  Session session = new Session("http://localhost", 8910);
+ * --------------------
+ */
 class Session
 {
 
@@ -71,6 +82,14 @@ class Session
     string sessionId;
     string sessionUrl;
 
+    /**
+   Create a new PhantomJs session.
+   Params:
+        host = host of phantomjs server
+        port = port of phantomjs server
+   Examples:
+       Session session = new Session("http://localhost", 8910);
+   */
     this(string host, int port)
     {
         this.host = host;
@@ -79,17 +98,6 @@ class Session
         create();
     }
 
-    /* Session
-   POST /session
-        Create a new session. The server should attempt to create a session that most closely matches the desired and required capabilities. Required capabilities have higher priority than desired capabilities and must be set for the session to be created.
-   JSON Parameters:
-        desiredCapabilities - {object} An object describing the session's desired capabilities.
-        requiredCapabilities - {object} An object describing the session's required capabilities (Optional).
-   Returns:
-        {object} An object describing the session's capabilities.
-   Potential Errors:
-        SessionNotCreatedException - If a required capability could not be set.
-   */
     private void create()
     {
         auto sessionDetails = RequestSession(Capabilities("phantomjs", "",
@@ -104,17 +112,12 @@ class Session
         log!(__FUNCTION__).info("creating new session with id: " ~ sessionId);
     }
 
-    /* /sessions
-    GET /sessions
-        Returns a list of the currently active sessions. Each session will be returned as a list of JSON objects with the following keys:
-
-    Key	           Type	    Description
-    ------------------------------------
-    id	           string	The session ID.
-    capabilities   object	An object describing the session's capabilities.
-
+    /**
+    Returns a list of the currently active sessions
     Returns:
-        {Array.<Object>} A list of the currently active sessions.
+     An array of Sessions struct containing the session's capabilities.
+    Example:
+      session.getSessions();
     */
     public Sessions[] getSessions()
     {
@@ -281,7 +284,7 @@ class Session
         handleFailedRequest(sessionUrl, response);
     }
 
-    /*
+    /**
     /session/:sessionId/refresh
     POST /session/:sessionId/refresh
         Refresh the current page.
