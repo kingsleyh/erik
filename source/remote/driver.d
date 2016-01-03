@@ -1,0 +1,84 @@
+module remote.driver;
+
+import remote.model;
+import std.json;
+import std.conv;
+import std.net.curl;
+
+class Driver
+{
+
+    string host;
+    int port;
+    string phantomServer;
+
+    this(string host, int port)
+    {
+        this.host = host;
+        this.port = port;
+        this.phantomServer = host ~ ":" ~ to!string(port);
+    }
+
+    public HttpResponse doGet(string url)
+    {
+        char[] responseBody;
+        int responseCode;
+
+        auto client = HTTP(phantomServer ~ url);
+        client.addRequestHeader("Content-Type", "application/json");
+
+        client.method = HTTP.Method.get;
+        client.onReceive = (ubyte[] data) {
+            responseBody ~= cast(const(char)[]) data;
+            return data.length;
+        };
+        client.onReceiveStatusLine = (HTTP.StatusLine status) {
+            responseCode = status.code;
+        };
+
+        client.perform();
+        return HttpResponse(responseCode, to!string(responseBody));
+    }
+
+    public HttpResponse doPost(string url, JSONValue value)
+    {
+        char[] responseBody;
+        int responseCode;
+
+        auto client = HTTP(phantomServer ~ url);
+
+        client.method = HTTP.Method.post;
+        client.setPostData(to!string(value), "application/json");
+        client.onReceive = (ubyte[] data) {
+            responseBody ~= cast(const(char)[]) data;
+            return data.length;
+        };
+        client.onReceiveStatusLine = (HTTP.StatusLine status) {
+            responseCode = status.code;
+        };
+
+        client.perform();
+        return HttpResponse(responseCode, to!string(responseBody));
+    }
+
+    public HttpResponse doDelete(string url)
+    {
+        char[] responseBody;
+        int responseCode;
+
+        auto client = HTTP(phantomServer ~ url);
+        client.addRequestHeader("Content-Type", "application/json");
+
+        client.method = HTTP.Method.del;
+        client.onReceive = (ubyte[] data) {
+            responseBody ~= cast(const(char)[]) data;
+            return data.length;
+        };
+        client.onReceiveStatusLine = (HTTP.StatusLine status) {
+            responseCode = status.code;
+        };
+
+        client.perform();
+        return HttpResponse(responseCode, to!string(responseBody));
+    }
+}

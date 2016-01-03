@@ -1,114 +1,29 @@
 module remote.api;
 
-//import jsonizer : fromjson, tojson, jsonize;
-
 import jsonizer.fromjson;
 import jsonizer.tojson;
 import jsonizer.jsonize;
 
 import std.json;
 import std.stdio;
-import std.conv;
-import std.net.curl;
-import std.algorithm;
 import std.array;
-import core.thread;
+
+import remote.model;
+import remote.driver;
 
 void main(string[] args)
 {
+
     Session session = new Session("http://localhost", 8910);
-    session.useOrCreate();
-//            session.create();
+    session.create();
     writeln(session.sessionId);
-    //    writeln(session.getWindowHandles().content);
-    writeln(session.visitUrl("www.autotrader.co.uk").content);
+//    writeln(session.getWindowHandles().content);
+    writeln(session.visitUrl("http://www.autotrader.co.uk"));
+        writeln(session.findElement(LocatorStrategy.ID, "coverImage"));
     writeln(session.getTitle().content);
-    writeln(session.getSource().content);
+    //    writeln(session.getSource().content);
+    session.dispose();
 
-}
-
-struct HttpResponse
-{
-    int code;
-    string content;
-}
-
-class Driver
-{
-
-    string host;
-    int port;
-    string phantomServer;
-
-    this(string host, int port)
-    {
-        this.host = host;
-        this.port = port;
-        this.phantomServer = host ~ ":" ~ to!string(port);
-    }
-
-    public HttpResponse doGet(string url)
-    {
-        char[] responseBody;
-        int responseCode;
-
-        auto client = HTTP(phantomServer ~ url);
-        client.addRequestHeader("Content-Type", "application/json");
-
-        client.method = HTTP.Method.get;
-        client.onReceive = (ubyte[] data) {
-            responseBody ~= cast(const(char)[]) data;
-            return data.length;
-        };
-        client.onReceiveStatusLine = (HTTP.StatusLine status) {
-            responseCode = status.code;
-        };
-
-        client.perform();
-        return HttpResponse(responseCode, to!string(responseBody));
-    }
-
-    public HttpResponse doPost(string url, JSONValue value)
-    {
-        char[] responseBody;
-        int responseCode;
-
-        auto client = HTTP(phantomServer ~ url);
-
-        client.method = HTTP.Method.post;
-        client.setPostData(to!string(value), "application/json");
-        client.onReceive = (ubyte[] data) {
-            responseBody ~= cast(const(char)[]) data;
-            return data.length;
-        };
-        client.onReceiveStatusLine = (HTTP.StatusLine status) {
-            responseCode = status.code;
-        };
-
-        client.perform();
-        return HttpResponse(responseCode, to!string(responseBody));
-    }
-
-    public HttpResponse doDelete(string url)
-    {
-        char[] responseBody;
-        int responseCode;
-
-        auto client = HTTP(phantomServer ~ url);
-        client.addRequestHeader("Content-Type", "application/json");
-
-        client.method = HTTP.Method.del;
-        client.onReceive = (ubyte[] data) {
-            responseBody ~= cast(const(char)[]) data;
-            return data.length;
-        };
-        client.onReceiveStatusLine = (HTTP.StatusLine status) {
-            responseCode = status.code;
-        };
-
-        client.perform();
-        return HttpResponse(responseCode, to!string(responseBody));
-    }
 }
 
 class Session
@@ -140,9 +55,9 @@ class Session
    */
     public Session create()
     {
-        auto sessionDetails = ApiSession(DesiredCapabilities("phantomjs", "",
-            "MAC"), RequiredCapabilities("phantomjs", "", "MAC"));
-        JSONValue sessionData = toJSON!ApiSession(sessionDetails);
+        auto sessionDetails = RequestSession(DesiredCapabilities("phantomjs",
+            "", "MAC"), RequiredCapabilities("phantomjs", "", "MAC"));
+        JSONValue sessionData = toJSON!RequestSession(sessionDetails);
 
         HttpResponse response = driver.doPost("/session", sessionData);
 
@@ -150,23 +65,6 @@ class Session
         this.sessionId = json["sessionId"].str;
         this.sessionUrl = "/session/" ~ sessionId;
         writeln("creating new session: ", sessionId);
-        return this;
-    }
-
-    public Session useOrCreate()
-    {
-        auto json = parseJSON(getSessions().content);
-        auto sessions = json["value"].array;
-        if (sessions.length > 0)
-        {
-            this.sessionId = sessions.front["id"].str;
-            this.sessionUrl = "/session/" ~ sessionId;
-            writeln("re-using session: ", this.sessionId);
-        }
-        else
-        {
-            create();
-        }
         return this;
     }
 
@@ -200,7 +98,7 @@ class Session
         return driver.doGet(sessionUrl);
     }
 
-    public HttpResponse deleteSession()
+    public HttpResponse dispose()
     {
         return driver.doDelete(sessionUrl);
     }
@@ -217,7 +115,7 @@ class Session
     */
     public HttpResponse visitUrl(string url)
     {
-        JSONValue apiUrl = toJSON!ApiUrl(ApiUrl(url));
+        JSONValue apiUrl = toJSON!RequestUrl(RequestUrl(url));
         HttpResponse response = driver.doPost(sessionUrl ~ "/url", apiUrl);
         return response;
     }
@@ -242,63 +140,67 @@ class Session
         return driver.doGet(sessionUrl ~ "/title");
     }
 
-}
+    /*
+    /session/:sessionId/element
 
-struct ApiUrl
-{
-    mixin JsonizeMe;
+    POST /session/:sessionId/element
 
-    @jsonize
+    Search for an element on the page, starting from the document root. The located element will be returned as a WebElement JSON object. The table below lists the locator strategies that each server should support. Each locator must return the first matching element located in the DOM.
+
+    Strategy	    Description
+    --------------------------------------
+    class name	        Returns an element whose class name contains the search value; compound class names are not permitted.
+    css selector	    Returns an element matching a CSS selector.
+    id	                Returns an element whose ID attribute matches the search value.
+    name	            Returns an element whose NAME attribute matches the search value.
+    link text	        Returns an anchor element whose visible text matches the search value.
+    partial link text	Returns an anchor element whose visible text partially matches the search value.
+    tag name	        Returns an element whose tag name matches the search value.
+    xpath	            Returns an element matching an XPath expression.
+
+    URL Parameters:
+        :sessionId - ID of the session to route the command to.
+    JSON Parameters:
+        using - {string} The locator strategy to use.
+        value - {string} The The search target.
+    Returns:
+        {ELEMENT:string} A WebElement JSON object for the located element.
+    Potential Errors:
+        NoSuchWindow - If the currently selected window has been closed.
+        NoSuchElement - If the element cannot be found.
+        XPathLookupError - If using XPath and the input expression is invalid.
+    */
+    public HttpResponse findElement(LocatorStrategy strategy, string value)
     {
-        string url;
+        string _strategy = strategy;
+        JSONValue apiElement = toJSON!RequestFindElement(RequestFindElement(_strategy,
+            value));
+        HttpResponse response = driver.doPost(sessionUrl ~ "/element", apiElement);
+        return response;
     }
-}
-
-struct NewSessionResponse
-{
-    mixin JsonizeMe;
-
-    @jsonize
-    {
-        string sessionId;
-    }
-
-}
-
-struct DesiredCapabilities
-{
-    mixin JsonizeMe;
-
-    @jsonize
-    {
-        string browserName;
-        string platform;
-    }
-    @jsonize("version") string _version;
-
-}
-
-struct RequiredCapabilities
-{
-    mixin JsonizeMe;
-
-    @jsonize
-    {
-        string browserName;
-        string platform;
-    }
-    @jsonize("version") string _version;
 
 }
 
-struct ApiSession
+class Element
 {
-    mixin JsonizeMe;
 
-    @jsonize
+    string elementId;
+
+    this(string elementId)
     {
-        DesiredCapabilities desiredCapabilities;
-        RequiredCapabilities requiredCapabilities;
+        this.elementId = elementId;
     }
 
+}
+
+enum LocatorStrategy : string
+{
+    CLASS_NAME = "class name",
+    CSS_SELECTOR = "css selector",
+    ID = "id",
+    NAME = "name",
+    LINK_TEXT = "link text",
+    PARTIAL_LINK_TEXT = "partial link text",
+    TAG_NAME = "tag name",
+    XPATH = "xpath"
 }
