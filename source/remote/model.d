@@ -50,6 +50,27 @@ struct RequestUrl
     }
 }
 
+struct RequestSendKeys
+{
+    mixin JsonizeMe;
+
+    @jsonize
+    {
+        string[] value;
+    }
+}
+
+
+struct RequestElementClick
+{
+    mixin JsonizeMe;
+
+    @jsonize
+    {
+        string id;
+    }
+}
+
 struct HttpResponse
 {
     int code;

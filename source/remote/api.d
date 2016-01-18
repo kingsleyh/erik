@@ -15,20 +15,48 @@ import std.array;
 import std.algorithm;
 import std.file;
 import std.base64;
+import std.conv;
+import core.thread;
 
 import remote.model;
 import remote.driver;
+import remote.by;
 import logger;
 
 void main(string[] args)
 {
 
     Session session = new Session("http://localhost", 8910);
-    session.visitUrl("http://www.autotrader.co.uk");
+    session.visitUrl("http://localhost:10270/cb/#login");
     string title = session.getTitle();
     writeln(title);
-//    session.takeScreenshot();
-//    Element ele = session.getActiveElement();
+
+    WebElement username = session.findElement(By.className("cb-username"));
+    Thread.sleep(dur!("msecs")(50));
+    username.sendKeys("matt.cully@barclays.com");
+
+    WebElement password = session.findElement(By.className("cb-password"));
+    Thread.sleep(dur!("msecs")(50));
+    password.sendKeys("Password1");
+
+    writeln("username: ", username.getAttribute("value"));
+    writeln("password: ", password.getAttribute("value"));
+
+    WebElement loginButton = session.findElement(By.className("cb-login"));
+    Thread.sleep(dur!("msecs")(50));
+
+    writeln("text: ", loginButton.getText());
+
+    loginButton.click();
+
+    Thread.sleep(dur!("msecs")(1000));
+     writeln(session.getTitle());
+    
+
+    //    writeln(ele.getAttribute("value"));
+
+    //    session.takeScreenshot();
+    //    WebElement ele = session.getActiveElement();
 
     //    session.goForward();
 
@@ -43,9 +71,9 @@ void main(string[] args)
 
     //    session.getWindowHandles();
     //    session.visitUrl("http://www.autotrader.co.uk");
-    //    Element ele = session.findElement(LocatorStrategy.ID, "home");
-    //    Element ele = session.findElements(LocatorStrategy.CLASS_NAME, "mainNav-menu__item");
-    //    Element[] eles = session.findElements(LocatorStrategy.CLASS_NAME, "mainNav-menu__item");
+    //    WebElement ele = session.findElement(LocatorStrategy.ID, "home");
+    //    WebElement ele = session.findElements(LocatorStrategy.CLASS_NAME, "mainNav-menu__item");
+    //    WebElement[] eles = session.findElements(LocatorStrategy.CLASS_NAME, "mainNav-menu__item");
     //    writeln(eles[2].getText());
     //    writeln(ele.elementId);
     //    writeln(ele.getText());
@@ -440,44 +468,42 @@ class Session
         NoSuchElement - If the element cannot be found.
         XPathLookupError - If using XPath and the input expression is invalid.
     */
-    public Element findElement(LocatorStrategy strategy, string value)
+    public WebElement findElement(SearchContext searchContext)
     {
-        string _strategy = strategy;
-        JSONValue apiElement = toJSON!RequestFindElement(RequestFindElement(_strategy,
-            value));
+        JSONValue apiElement = toJSON!RequestFindElement(
+            RequestFindElement(searchContext.strategy, searchContext.value));
         HttpResponse response = driver.doPost(sessionUrl ~ "/element", apiElement);
         handleFailedRequest(sessionUrl, response);
         ElementResponse elementResponse = parseJSON(response.content).fromJSON!ElementResponse;
         string elementId = elementResponse.value["ELEMENT"];
-        return new Element(elementId, sessionId, sessionUrl, driver);
+        return new WebElement(elementId, sessionId, sessionUrl, driver);
     }
 
-    public Element[] findElements(LocatorStrategy strategy, string value)
+    public WebElement[] findElements(SearchContext searchContext)
     {
-        string _strategy = strategy;
-        JSONValue apiElement = toJSON!RequestFindElement(RequestFindElement(_strategy,
-            value));
+        JSONValue apiElement = toJSON!RequestFindElement(
+            RequestFindElement(searchContext.strategy, searchContext.value));
         HttpResponse response = driver.doPost(sessionUrl ~ "/elements", apiElement);
         handleFailedRequest(sessionUrl, response);
         ElementResponses elementResponses = parseJSON(response.content).fromJSON!ElementResponses;
-        return elementResponses.value.map!(e => new Element(e["ELEMENT"],
+        return elementResponses.value.map!(e => new WebElement(e["ELEMENT"],
             sessionId, sessionUrl, driver)).array;
     }
 
     // why does this return "active" intead of an element?
-    public Element getActiveElement()
+    public WebElement getActiveElement()
     {
         string elementUrl = sessionUrl ~ "/element/active";
         HttpResponse response = driver.doGet(elementUrl);
         handleFailedRequest(elementUrl, response);
         ElementResponse elementResponse = parseJSON(response.content).fromJSON!ElementResponse;
         string elementId = elementResponse.value["ELEMENT"];
-        return new Element(elementId, sessionId, sessionUrl, driver);
+        return new WebElement(elementId, sessionId, sessionUrl, driver);
     }
 
 }
 
-class Element
+class WebElement
 {
 
     string elementId;
@@ -501,18 +527,30 @@ class Element
         return stringResponse.value;
     }
 
-}
+    public string getAttribute(string attribute)
+    {
+        HttpResponse response = driver.doGet(sessionUrl ~ "/attribute/" ~ attribute);
+        handleFailedRequest(sessionUrl, response);
+        StringResponse stringResponse = parseJSON(response.content).fromJSON!StringResponse;
+        return stringResponse.value;
+    }
 
-enum LocatorStrategy : string
-{
-    CLASS_NAME = "class name",
-    CSS_SELECTOR = "css selector",
-    ID = "id",
-    NAME = "name",
-    LINK_TEXT = "link text",
-    PARTIAL_LINK_TEXT = "partial link text",
-    TAG_NAME = "tag name",
-    XPATH = "xpath"
+    public void sendKeys(string keys)
+    {
+        string[] val = keys.map!(to!string).array;
+        JSONValue apiElement = toJSON!RequestSendKeys(RequestSendKeys(val));
+        HttpResponse response = driver.doPost(sessionUrl ~ "/value", apiElement);
+        handleFailedRequest(sessionUrl, response);
+    }
+
+    public void click()
+    {
+        JSONValue apiElement = toJSON!RequestElementClick(RequestElementClick(elementId));
+        HttpResponse response = driver.doPost(sessionUrl ~ "/click", apiElement);
+        handleFailedRequest(sessionUrl, response);
+        writeln(response);
+    }
+
 }
 
 enum TimeoutType : string
