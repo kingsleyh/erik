@@ -13,45 +13,66 @@ import std.json;
 import std.stdio;
 import std.array;
 import std.algorithm;
+import std.parallelism;
 import std.file;
 import std.base64;
 import std.conv;
+import std.process;
+import std.socket;
+import std.path;
+import std.datetime;
+import std.exception;
+import core.stdc.stdlib;
+import core.sys.posix.signal : SIGKILL;
 import core.thread;
 
 import remote.model;
 import remote.driver;
 import remote.by;
+import remote.condition;
+import remote.webelement;
 import logger;
 
 void main(string[] args)
 {
-
-    Session session = new Session("http://localhost", 8910);
+    //    Session session = new Session("http://localhost", 8910);
+    Session session = Session.start();
     session.visitUrl("http://localhost:10270/cb/#login");
     string title = session.getTitle();
     writeln(title);
 
-    WebElement username = session.findElement(By.className("cb-username"));
-    Thread.sleep(dur!("msecs")(50));
-    username.sendKeys("matt.cully@barclays.com");
+    //    WebElement username = session.findElement(By.className("cb-username"));
+    //    Thread.sleep(dur!("msecs")(50));
+    //    username.sendKeys("matt.cully@barclays.com");
+    //
+    //    WebElement password = session.findElement(By.className("cb-password"));
+    //    Thread.sleep(dur!("msecs")(50));
+    //    password.sendKeys("Password1");
+    //
+    //    writeln("username: ", username.getAttribute("value"));
+    //    writeln("password: ", password.getAttribute("value"));
+    //
+    //    WebElement loginButton = session.findElement(By.className("cb-login"));
+    //    Thread.sleep(dur!("msecs")(50));
+    //
+    //    writeln("text: ", loginButton.getText());
+    //
+    //    loginButton.click();
+    //
+    //    Thread.sleep(dur!("msecs")(1000));
+    //    writeln(session.getTitle());
+    //
+    //    WebElement dealLink = session.findElement(By.xpath("//*[text()='Common Ltd']"));
+    //    writeln(dealLink.getText());
+    //    dealLink.click();
+    //
+    //    Thread.sleep(dur!("msecs")(1000));
+    //
+    //    writeln(session.getTitle());
+    //
+    //    session.waitFor(By.tagName("title"), Condition.titleIs("Deal details | Corporate Banking"));
 
-    WebElement password = session.findElement(By.className("cb-password"));
-    Thread.sleep(dur!("msecs")(50));
-    password.sendKeys("Password1");
-
-    writeln("username: ", username.getAttribute("value"));
-    writeln("password: ", password.getAttribute("value"));
-
-    WebElement loginButton = session.findElement(By.className("cb-login"));
-    Thread.sleep(dur!("msecs")(50));
-
-    writeln("text: ", loginButton.getText());
-
-    loginButton.click();
-
-    Thread.sleep(dur!("msecs")(1000));
-     writeln(session.getTitle());
-    
+    //    session.waitFor(By.tagName("title"), Condition.titleIs("Deals | Corporate Banking"), 10);
 
     //    writeln(ele.getAttribute("value"));
 
@@ -82,25 +103,6 @@ void main(string[] args)
     //    session.getSource();
     //    writeln(session.getSource().content);
     session.dispose();
-
-}
-
-void handleFailedRequest(string url, HttpResponse response)
-{
-    if (response.code != 200)
-    {
-        throw new APIResponseError(
-            "request for " ~ url ~ " returned failed error code: " ~ to!string(response.code) ~ " with message: " ~ response
-            .content);
-    }
-}
-
-class APIResponseError : Exception
-{
-    this(string msg)
-    {
-        super(msg);
-    }
 }
 
 /**
@@ -117,6 +119,8 @@ class Session
     Driver driver;
     string sessionId;
     string sessionUrl;
+    Pid phantomPid;
+    Task!(startPhantom, string, Session)* phantomTask;
 
     /**
    Create a new PhantomJs session.
@@ -126,15 +130,72 @@ class Session
    Examples:
        Session session = new Session("http://localhost", 8910);
    */
-    this(string host, int port)
+    this(string host, int port, bool deferCreate = false)
     {
         this.host = host;
         this.port = port;
         this.driver = new Driver(host, port);
-        create();
+        if (!deferCreate)
+        {
+            create();
+        }
     }
 
-    private void create()
+    ~this()
+    {
+        writeln("shutting down phantomjs");
+        this.phantomTask.yieldForce();
+        writeln(this.phantomPid.osHandle());
+         kill(this.phantomPid, SIGKILL);
+        assert(wait(this.phantomPid) == -SIGKILL);
+    }
+
+    private void setPhantomPid(Pid pid)
+    {
+        this.phantomPid = pid;
+    }
+
+    private void setPhantomTask(Task!(startPhantom, string, Session)* task)
+    {
+        this.phantomTask = task;
+    }
+
+    private static Address getFreePort()
+    {
+        Socket server = new TcpSocket();
+        server.setOption(SocketOptionLevel.SOCKET, SocketOption.REUSEADDR, true);
+        server.bind(new InternetAddress(0));
+        Address address = server.localAddress;
+        server.close();
+        return address;
+    }
+
+    public static Session start(string pathToPhantom = "/usr/local/bin/phantomjs",
+        string host = "127.0.0.1", string phantomPort = getFreePort().toPortString)
+    {
+        immutable int intPort = to!int(phantomPort);
+        string command = pathToPhantom ~ " --webdriver=" ~ host ~ ":" ~ phantomPort;
+        writeln(command);
+
+        Session session = new Session(host, intPort, true);
+
+        auto phantomTask = task!startPhantom(command, session);
+        writeln(typeof(phantomTask).stringof);
+        session.setPhantomTask(phantomTask);
+        phantomTask.executeInNewThread();
+        Thread.sleep(dur!("msecs")(5000));
+        session.create();
+        //        writeln(session.phantomPid);
+        return session;
+    }
+
+    public static void startPhantom(string command, Session session)
+    {
+        Pid pid = spawnShell(command);
+        session.setPhantomPid(pid);
+    }
+
+    protected void create()
     {
         auto sessionDetails = RequestSession(Capabilities("phantomjs", "",
             "MAC"), Capabilities("phantomjs", "", "MAC"));
@@ -146,6 +207,35 @@ class Session
         this.sessionId = json["sessionId"].str;
         this.sessionUrl = "/session/" ~ sessionId;
         log!(__FUNCTION__).info("creating new session with id: " ~ sessionId);
+    }
+
+    public void waitFor(By by, Condition condition, int timeout = 5000)
+    {
+        int count = 0;
+        waitForResult(by, count, condition, timeout);
+    }
+
+    private void waitForResult(By by, int count, Condition condition, int timeout)
+    {
+        if (count >= timeout)
+        {
+            throw new TimeoutException("Timed out while waiting for elements");
+        }
+        else
+        {
+            Thread.sleep(dur!("msecs")(100));
+            WebElement[] elements = findElements(by);
+            if (elements.length > 0 && condition.isSatisfied(elements))
+            {
+                return;
+            }
+            else
+            {
+                count = count + 100;
+                waitForResult(by, count, condition, timeout);
+            }
+
+        }
     }
 
     /**
@@ -468,10 +558,10 @@ class Session
         NoSuchElement - If the element cannot be found.
         XPathLookupError - If using XPath and the input expression is invalid.
     */
-    public WebElement findElement(SearchContext searchContext)
+    public WebElement findElement(By by)
     {
         JSONValue apiElement = toJSON!RequestFindElement(
-            RequestFindElement(searchContext.strategy, searchContext.value));
+            RequestFindElement(by.getStrategy(), by.getValue()));
         HttpResponse response = driver.doPost(sessionUrl ~ "/element", apiElement);
         handleFailedRequest(sessionUrl, response);
         ElementResponse elementResponse = parseJSON(response.content).fromJSON!ElementResponse;
@@ -479,10 +569,10 @@ class Session
         return new WebElement(elementId, sessionId, sessionUrl, driver);
     }
 
-    public WebElement[] findElements(SearchContext searchContext)
+    public WebElement[] findElements(By by)
     {
         JSONValue apiElement = toJSON!RequestFindElement(
-            RequestFindElement(searchContext.strategy, searchContext.value));
+            RequestFindElement(by.getStrategy(), by.getValue()));
         HttpResponse response = driver.doPost(sessionUrl ~ "/elements", apiElement);
         handleFailedRequest(sessionUrl, response);
         ElementResponses elementResponses = parseJSON(response.content).fromJSON!ElementResponses;
@@ -499,56 +589,6 @@ class Session
         ElementResponse elementResponse = parseJSON(response.content).fromJSON!ElementResponse;
         string elementId = elementResponse.value["ELEMENT"];
         return new WebElement(elementId, sessionId, sessionUrl, driver);
-    }
-
-}
-
-class WebElement
-{
-
-    string elementId;
-    Driver driver;
-    string sessionId;
-    string sessionUrl;
-
-    this(string elementId, string sessionId, string sessionUrl, Driver driver)
-    {
-        this.elementId = elementId;
-        this.sessionId = sessionId;
-        this.sessionUrl = sessionUrl ~ "/element/" ~ elementId;
-        this.driver = driver;
-    }
-
-    public string getText()
-    {
-        HttpResponse response = driver.doGet(sessionUrl ~ "/text");
-        handleFailedRequest(sessionUrl, response);
-        StringResponse stringResponse = parseJSON(response.content).fromJSON!StringResponse;
-        return stringResponse.value;
-    }
-
-    public string getAttribute(string attribute)
-    {
-        HttpResponse response = driver.doGet(sessionUrl ~ "/attribute/" ~ attribute);
-        handleFailedRequest(sessionUrl, response);
-        StringResponse stringResponse = parseJSON(response.content).fromJSON!StringResponse;
-        return stringResponse.value;
-    }
-
-    public void sendKeys(string keys)
-    {
-        string[] val = keys.map!(to!string).array;
-        JSONValue apiElement = toJSON!RequestSendKeys(RequestSendKeys(val));
-        HttpResponse response = driver.doPost(sessionUrl ~ "/value", apiElement);
-        handleFailedRequest(sessionUrl, response);
-    }
-
-    public void click()
-    {
-        JSONValue apiElement = toJSON!RequestElementClick(RequestElementClick(elementId));
-        HttpResponse response = driver.doPost(sessionUrl ~ "/click", apiElement);
-        handleFailedRequest(sessionUrl, response);
-        writeln(response);
     }
 
 }

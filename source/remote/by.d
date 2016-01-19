@@ -12,28 +12,60 @@ enum LocatorStrategy : string
     XPATH = "xpath"
 }
 
-struct SearchContext
+public class ByProvider : By
 {
-    LocatorStrategy strategy;
-    string value;
+    private LocatorStrategy strategy;
+    private string value;
+
+    this(LocatorStrategy strategy, string value)
+    {
+        this.strategy = strategy;
+        this.value = value;
+    }
+
+
+    override public LocatorStrategy getStrategy()
+    {
+        return this.strategy;
+    }
+
+
+    override public string getValue()
+    {
+        return this.value;
+    }
 }
 
-static class By
+public static abstract class By
 {
 
-    public static SearchContext id(string value)
+    public LocatorStrategy getStrategy();
+    public string getValue();
+
+    public static By id(string value)
     {
-        return SearchContext(LocatorStrategy.ID, value);
+        return new ByProvider(LocatorStrategy.ID, value);
     }
 
-    public static SearchContext className(string value)
+    public static By className(string value)
     {
-        return SearchContext(LocatorStrategy.CLASS_NAME, value);
+        return new ByProvider(LocatorStrategy.CLASS_NAME, value);
     }
 
-    public static SearchContext cssSelector(string value)
+    public static By cssSelector(string value)
     {
-        return SearchContext(LocatorStrategy.CSS_SELECTOR, value);
+        return new ByProvider(LocatorStrategy.CSS_SELECTOR, value);
+    }
+
+    public static By tagName(string value)
+    {
+        return new ByProvider(LocatorStrategy.TAG_NAME, value);
+    }
+
+    public static By xpath(string value)
+    {
+        return new ByProvider(LocatorStrategy.XPATH, value);
     }
 
 }
+

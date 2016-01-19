@@ -6,6 +6,25 @@ import std.conv;
 import std.stdio;
 import std.net.curl;
 
+void handleFailedRequest(string url, HttpResponse response)
+{
+    if (response.code != 200)
+    {
+        throw new APIResponseError(
+            "request for " ~ url ~ " returned failed error code: " ~ to!string(response.code) ~ " with message: " ~ response
+            .content);
+    }
+}
+
+
+class APIResponseError : Exception
+{
+    this(string msg)
+    {
+        super(msg);
+    }
+}
+
 class DriverError : Exception
 {
     this(string msg)
@@ -15,6 +34,14 @@ class DriverError : Exception
 }
 
 class IllegalArgumentException : Exception
+{
+    this(string msg)
+    {
+        super(msg);
+    }
+}
+
+class TimeoutException : Exception
 {
     this(string msg)
     {
@@ -73,7 +100,7 @@ class Driver
 
         client.method = HTTP.Method.post;
         
-        writeln(to!string(value));
+        //writeln(to!string(value));
         
         client.setPostData(to!string(value), "application/json");
         client.onReceive = (ubyte[] data) {

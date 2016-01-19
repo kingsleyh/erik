@@ -3,7 +3,6 @@
 	"versions": {
 		"memutils": "0.4.3",
 		"jsonizer": "0.5.2",
-		"rainbow": "~master",
-		"libasync": "~master"
+		"rainbow": "~master"
 	}
 }
