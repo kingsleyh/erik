@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9c9a3b35-a0ab-4992-a9db-efe5f312c226" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/source/remote/condition.d" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/source/remote/webelement.d" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/erik" afterPath="$PROJECT_DIR$/erik" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/remote/api.d" afterPath="$PROJECT_DIR$/source/remote/api.d" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/remote/by.d" afterPath="$PROJECT_DIR$/source/remote/by.d" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/remote/driver.d" afterPath="$PROJECT_DIR$/source/remote/driver.d" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dub.selections.json" afterPath="$PROJECT_DIR$/dub.selections.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="erik.iws" />
@@ -38,8 +33,8 @@
       <file leaf-file-name="api.d" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/source/remote/api.d">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.46797386" vertical-offset="2908" max-vertical-offset="10319">
-              <caret line="150" column="5" selection-start-line="150" selection-start-column="5" selection-end-line="150" selection-end-column="5" />
+            <state vertical-scroll-proportion="0.7777778" vertical-offset="1870" max-vertical-offset="10319">
+              <caret line="145" column="39" selection-start-line="145" selection-start-column="39" selection-end-line="145" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -229,7 +224,7 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="MemberChooser.copyJavadoc" value="false" />
-    <property name="options.lastSelected" value="D Tools" />
+    <property name="options.lastSelected" value="preferences.pluginManager" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="recentsLimit" value="5" />
@@ -250,6 +245,9 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="FullScreen" value="false" />
     <property name="restartRequiresConfirmation" value="true" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
   </component>
   <component name="PsiViewer.ProjectComponent">
     <option name="HIGHLIGHT" value="false" />
@@ -657,7 +655,7 @@
       <option name="number" value="Default" />
       <updated>1453134245268</updated>
       <workItem from="1453134248624" duration="17332000" />
-      <workItem from="1453219470340" duration="9143000" />
+      <workItem from="1453219470340" duration="13105000" />
     </task>
     <task id="LOCAL-00001" summary="updates">
       <created>1453144496357</created>
@@ -665,11 +663,17 @@
       <option name="project" value="LOCAL" />
       <updated>1453144496357</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="updates">
+      <created>1453228807191</created>
+      <option name="number" value="00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1453228807191</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="26475000" />
+    <option name="totallyTimeSpent" value="30437000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="236" y="90" width="2079" height="1288" extended-state="0" />
@@ -1186,11 +1190,100 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/source/remote/api.d">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.46797386" vertical-offset="2908" max-vertical-offset="10319">
-          <caret line="150" column="5" selection-start-line="150" selection-start-column="5" selection-end-line="150" selection-end-column="5" />
+        <state vertical-scroll-proportion="0.7777778" vertical-offset="1870" max-vertical-offset="10319">
+          <caret line="145" column="39" selection-start-line="145" selection-start-column="39" selection-end-line="145" selection-end-column="39" />
           <folding />
         </state>
       </provider>
     </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>JetBrains JFlex</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.7</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>erik</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.7</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>jsonizer-0.5.2</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
   </component>
 </project>

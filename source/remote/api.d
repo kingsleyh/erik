@@ -120,7 +120,7 @@ class Session
     string sessionId;
     string sessionUrl;
     Pid phantomPid;
-    Task!(startPhantom, string, Session)* phantomTask;
+    Task!(startPhantom, string[])* phantomTask;
 
     /**
    Create a new PhantomJs session.
@@ -144,18 +144,12 @@ class Session
     ~this()
     {
         writeln("shutting down phantomjs");
-        this.phantomTask.yieldForce();
-        writeln(this.phantomPid.osHandle());
-         kill(this.phantomPid, SIGKILL);
-        assert(wait(this.phantomPid) == -SIGKILL);
+        Pid pid = this.phantomTask.yieldForce();
+        kill(pid, SIGKILL);
+        assert(wait(pid) == -SIGKILL);
     }
 
-    private void setPhantomPid(Pid pid)
-    {
-        this.phantomPid = pid;
-    }
-
-    private void setPhantomTask(Task!(startPhantom, string, Session)* task)
+    private void setPhantomTask(Task!(startPhantom, string[])* task)
     {
         this.phantomTask = task;
     }
@@ -174,25 +168,22 @@ class Session
         string host = "127.0.0.1", string phantomPort = getFreePort().toPortString)
     {
         immutable int intPort = to!int(phantomPort);
-        string command = pathToPhantom ~ " --webdriver=" ~ host ~ ":" ~ phantomPort;
-        writeln(command);
+        string[] commands = [pathToPhantom, "--webdriver=" ~ host ~ ":" ~ phantomPort];
+        writeln(commands);
 
         Session session = new Session(host, intPort, true);
 
-        auto phantomTask = task!startPhantom(command, session);
-        writeln(typeof(phantomTask).stringof);
+        auto phantomTask = task!startPhantom(commands);
         session.setPhantomTask(phantomTask);
         phantomTask.executeInNewThread();
-        Thread.sleep(dur!("msecs")(5000));
+        Thread.sleep(dur!("msecs")(1000));
         session.create();
-        //        writeln(session.phantomPid);
         return session;
     }
 
-    public static void startPhantom(string command, Session session)
+    public static Pid startPhantom(string[] commands)
     {
-        Pid pid = spawnShell(command);
-        session.setPhantomPid(pid);
+        return spawnProcess(commands);
     }
 
     protected void create()
@@ -207,6 +198,15 @@ class Session
         this.sessionId = json["sessionId"].str;
         this.sessionUrl = "/session/" ~ sessionId;
         log!(__FUNCTION__).info("creating new session with id: " ~ sessionId);
+    }
+
+    private void shutdownPhantom()
+    {
+        Pid pid = this.phantomTask.yieldForce();
+        log!(__FUNCTION__).info("shutting down phantomjs with pid: " ~ to!string(pid.osHandle()));
+        kill(pid, SIGKILL);
+        assert(wait(pid) == -SIGKILL);
+
     }
 
     public void waitFor(By by, Condition condition, int timeout = 5000)
