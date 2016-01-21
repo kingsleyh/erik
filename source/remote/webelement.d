@@ -8,6 +8,7 @@ import std.algorithm;
 import std.file;
 import std.base64;
 import std.conv;
+import std.string;
 import core.thread;
 
 import jsonizer.fromjson;
@@ -62,7 +63,48 @@ class WebElement
         JSONValue apiElement = toJSON!RequestElementClick(RequestElementClick(elementId));
         HttpResponse response = driver.doPost(sessionUrl ~ "/click", apiElement);
         handleFailedRequest(sessionUrl, response);
-        writeln(response);
+    }
+
+    public bool isEnabled()
+    {
+        HttpResponse response = driver.doGet(sessionUrl ~ "/enabled");
+        handleFailedRequest(sessionUrl, response);
+        BooleanResponse booleanResponse = parseJSON(response.content).fromJSON!BooleanResponse;
+        return booleanResponse.value;
+    }
+
+    public bool isDisplayed()
+    {
+        HttpResponse response = driver.doGet(sessionUrl ~ "/displayed");
+        handleFailedRequest(sessionUrl, response);
+        BooleanResponse booleanResponse = parseJSON(response.content).fromJSON!BooleanResponse;
+        return booleanResponse.value;
+    }
+
+    public string getName()
+    {
+        HttpResponse response = driver.doGet(sessionUrl ~ "/name");
+        handleFailedRequest(sessionUrl, response);
+        StringResponse stringResponse = parseJSON(response.content).fromJSON!StringResponse;
+        return stringResponse.value;
+
+    }
+
+//    public string getLocation()
+//    {
+//        HttpResponse response = driver.doGet(sessionUrl ~ "/location");
+//        handleFailedRequest(sessionUrl, response);
+//        StringResponse stringResponse = parseJSON(response.content).fromJSON!StringResponse;
+//        return stringResponse.value;
+//    }
+
+    public string asString()
+    {
+        return format(`
+        elementId: %s
+        name: %s
+      `,
+            elementId, getName());
     }
 
 }

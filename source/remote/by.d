@@ -34,6 +34,13 @@ public class ByProvider : By
     {
         return this.value;
     }
+    
+    override public string asString(){
+          return "locator:  " ~ strategy ~ ", value: " ~ value;
+
+        }
+    
+    
 }
 
 public static abstract class By
@@ -41,6 +48,7 @@ public static abstract class By
 
     public LocatorStrategy getStrategy();
     public string getValue();
+    public string asString();
 
     public static By id(string value)
     {

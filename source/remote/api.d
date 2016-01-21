@@ -35,11 +35,103 @@ import logger;
 
 void main(string[] args)
 {
-    //    Session session = new Session("http://localhost", 8910);
     Session session = Session.start();
+
     session.visitUrl("http://localhost:10270/cb/#login");
-    string title = session.getTitle();
-    writeln(title);
+
+
+
+    session.waitFor(By.className("nav-state"),
+        Condition.attributeContains("data-module-id", "viewmodels/login"));
+
+            WebElement username = session.findElement(By.className("cb-username"));
+            username.sendKeys("matt.cully@barclays.com");
+            writeln("username: ", username.getAttribute("value"));
+
+            WebElement password = session.findElement(By.className("cb-password"));
+            password.sendKeys("Password1");
+            writeln("password: ", password.getAttribute("value"));
+
+            WebElement loginButton = session.findElement(By.className("cb-login"));
+            session.waitFor(loginButton, Condition.isClickable());
+            loginButton.click();
+
+            session.waitFor(By.className("nav-state"),
+                Condition.attributeContains("data-module-id", "viewmodels/deals"));
+
+            // create deal if does not exist
+            if (!session.elementExists(By.xpath("//*[text()='CoolDeal']")))
+            {
+                WebElement dealNameInput = session.findElement(By.cssSelector("input"));
+                session.waitFor(dealNameInput, Condition.isClickable());
+                dealNameInput.sendKeys("CoolDeal");
+                WebElement createButton = session.findElement(By.xpath("//*[text()='Create new']"));
+                session.waitFor(createButton, Condition.isClickable());
+                createButton.click();
+            }
+
+            WebElement detailsLink = session.findElement(By.xpath("//*[text()='CoolDeal']"));
+//            writeln(detailsLink.getName());
+            session.waitFor(detailsLink, Condition.isClickable());
+//             Thread.sleep(dur!("msecs")(2000));
+//            detailsLink.click();
+            Thread.sleep(dur!("msecs")(2000));
+            writeln(session.getTitle());
+            
+
+//            session.waitFor(By.className("nav-state"),
+//                Condition.attributeContains("data-module-id", "viewmodels/deal/deal-details/deal-details"));
+
+//            WebElement dealInput = session.findElement(By.cssSelector("input[name='deal-name']"));
+//            writeln(dealInput.getAttribute("value"));
+
+    // create person if does not exist
+    //    struct Person
+    //    {
+    //        string firstName;
+    //        string lastName;
+    //        public string fullName()
+    //        {
+    //            return firstName ~ " " ~ lastName;
+    //        }
+    //    }
+    //
+    //    Person david = Person("David", "Apple");
+    //
+    //    if (!session.elementExists(By.xpath("//*[text()='" ~ david.fullName() ~ "']")))
+    //    {
+    //        WebElement person = session.findElement(By.className("create-new-person"));
+    //        session.waitFor(person, Condition.isClickable());
+    //        person.click();
+    //
+    //        WebElement firstNameInput = session.findElement(By.cssSelector("input[name='first-name']"));
+    //        session.waitFor(firstNameInput, Condition.isClickable());
+    //        firstNameInput.sendKeys(david.firstName);
+    //
+    //        writeln(firstNameInput.getAttribute("value"));
+    //
+    //    }
+
+    //    private def createPersonIfDoesNotExist(person: Person, page: Page) = {
+    //      if (!page.elementExists(By.xpath(s"//*[text()='${person.fullName}']"))) {
+    //        page.driver.clickOnEnabledButton(By.className("create-new-person"))
+    //        page.driver.fillInFormField(By.cssSelector("input[name='first-name']"), person.firstName)
+    //        page.driver.fillInFormField(By.cssSelector("input[name='last-name']"), person.lastName)
+    //        page.driver.fillInFormField(By.cssSelector("input[name='work-email']"), person.email)
+    //        page.driver.clickOnEnabledButton(By.className("cb-inline-person-done"))
+    //      }
+    //    }
+
+    //    writeln(session.getTitle());
+
+    //   Thread.sleep(dur!("msecs")(2000));
+    //    WebElement username = session.findElement(By.className("cb-username"));
+    //    username.sendKeys("matt.cully@barclays.com");
+    //
+    //    writeln(username.getAttribute("value"));
+    //
+    //    WebElement title = session.findElement(By.tagName("title"));
+    //    writeln(title.getAttribute("text"));
 
     //    WebElement username = session.findElement(By.className("cb-username"));
     //    Thread.sleep(dur!("msecs")(50));
@@ -102,7 +194,10 @@ void main(string[] args)
     //    session.getUrl();
     //    session.getSource();
     //    writeln(session.getSource().content);
-    session.dispose();
+    //
+
+    //        session.shutdown();
+
 }
 
 /**
@@ -141,14 +236,6 @@ class Session
         }
     }
 
-    ~this()
-    {
-        writeln("shutting down phantomjs");
-        Pid pid = this.phantomTask.yieldForce();
-        kill(pid, SIGKILL);
-        assert(wait(pid) == -SIGKILL);
-    }
-
     private void setPhantomTask(Task!(startPhantom, string[])* task)
     {
         this.phantomTask = task;
@@ -169,7 +256,7 @@ class Session
     {
         immutable int intPort = to!int(phantomPort);
         string[] commands = [pathToPhantom, "--webdriver=" ~ host ~ ":" ~ phantomPort];
-        writeln(commands);
+        //        writeln(commands);
 
         Session session = new Session(host, intPort, true);
 
@@ -200,13 +287,19 @@ class Session
         log!(__FUNCTION__).info("creating new session with id: " ~ sessionId);
     }
 
-    private void shutdownPhantom()
+    public void shutdown()
     {
         Pid pid = this.phantomTask.yieldForce();
         log!(__FUNCTION__).info("shutting down phantomjs with pid: " ~ to!string(pid.osHandle()));
         kill(pid, SIGKILL);
         assert(wait(pid) == -SIGKILL);
 
+    }
+
+    public void waitFor(WebElement element, Condition condition, int timeout = 5000)
+    {
+        int count = 0;
+        waitForElementResult(element, count, condition, timeout);
     }
 
     public void waitFor(By by, Condition condition, int timeout = 5000)
@@ -219,7 +312,8 @@ class Session
     {
         if (count >= timeout)
         {
-            throw new TimeoutException("Timed out while waiting for elements");
+            throw new TimeoutException(
+                "Timed out while waiting for condition: " ~ condition.asString() ~ " for: " ~ by.asString());
         }
         else
         {
@@ -236,6 +330,41 @@ class Session
             }
 
         }
+    }
+
+    private void waitForElementResult(WebElement element, int count,
+        Condition condition, int timeout)
+    {
+        if (count >= timeout)
+        {
+            throw new TimeoutException(
+                "Timed out while waiting for condition: " ~ condition.asString() ~ " for: " ~ element.asString());
+        }
+        else
+        {
+            Thread.sleep(dur!("msecs")(100));
+            WebElement[] elements = [element];
+            if (condition.isSatisfied(elements))
+            {
+                return;
+            }
+            else
+            {
+                count = count + 100;
+                waitForElementResult(element, count, condition, timeout);
+            }
+
+        }
+    }
+
+    public bool elementExists(By by)
+    {
+        JSONValue apiElement = toJSON!RequestFindElement(
+            RequestFindElement(by.getStrategy(), by.getValue()));
+        HttpResponse response = driver.doPost(sessionUrl ~ "/elements", apiElement);
+        handleFailedRequest(sessionUrl, response);
+        ElementResponses elementResponses = parseJSON(response.content).fromJSON!ElementResponses;
+        return elementResponses.value.length > 0;
     }
 
     /**

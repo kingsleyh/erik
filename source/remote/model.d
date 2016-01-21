@@ -169,6 +169,18 @@ struct StringResponse
     }
 }
 
+struct BooleanResponse
+{
+    mixin JsonizeMe;
+
+    @jsonize
+    {
+        string sessionId;
+        int status;
+        bool value;
+    }
+}
+
 struct ElementResponse
 {
     mixin JsonizeMe;
