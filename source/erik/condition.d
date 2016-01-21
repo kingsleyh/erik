@@ -1,8 +1,8 @@
-module remote.condition;
+module erik.condition;
 
 import std.array;
 
-import remote.webelement;
+import erik.webelement;
 
 public static abstract class Condition
 {

@@ -1,4 +1,4 @@
-module remote.model;
+module erik.model;
 
 import jsonizer.fromjson;
 import jsonizer.tojson;

@@ -1,4 +1,4 @@
-module remote.by;
+module erik.by;
 
 enum LocatorStrategy : string
 {

@@ -1,11 +1,27 @@
 {
-  "name": "erik",
-  "description": "A minimal D application.",
-  "copyright": "Copyright © 2015, kings",
-  "authors": ["kings"],
-  "targetType": "executable",
+  "version": "0.0.1",
+  "description": "Phantomjs web testing library for D programming language",
+  "authors": [
+    "Kingsley Hendrickse"
+  ],
+  "importPaths": [
+    "source/"
+  ],
+  "license": "BSL-1.0",
+  "configurations": [
+    {
+      "targetType": "library",
+      "name": "library"
+    }
+  ],
+  "homepage": "https://github.com/kingsleyh/erik",
+  "sourcePaths": [
+    "source/"
+  ],
   "dependencies": {
     "jsonizer": "~>0.5.2",
-    "rainbow":"~master"
-  }
-}
+    "rainbow": "~master"
+  },
+  "name": "erik",
+  "copyright": "Copyright (c) 2016 Kingsley Hendrickse. All rights reserved."
+}        

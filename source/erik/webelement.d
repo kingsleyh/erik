@@ -1,4 +1,4 @@
-module remote.webelement;
+module erik.webelement;
 
 import std.array;
 import std.json;
@@ -15,8 +15,8 @@ import jsonizer.fromjson;
 import jsonizer.tojson;
 import jsonizer.jsonize;
 
-import remote.model;
-import remote.driver;
+import erik.model;
+import erik.driver;
 
 class WebElement
 {

@@ -1,6 +1,6 @@
-module remote.driver;
+module erik.driver;
 
-import remote.model;
+import erik.model;
 import std.json;
 import std.conv;
 import std.stdio;

@@ -1,4 +1,4 @@
-module logger;
+module erik.logger;
 
 import net.masterthought.rainbow;
 
