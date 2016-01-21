@@ -5,9 +5,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/erik" afterPath="$PROJECT_DIR$/erik" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/remote/api.d" afterPath="$PROJECT_DIR$/source/remote/api.d" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/remote/by.d" afterPath="$PROJECT_DIR$/source/remote/by.d" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/remote/condition.d" afterPath="$PROJECT_DIR$/source/remote/condition.d" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/remote/model.d" afterPath="$PROJECT_DIR$/source/remote/model.d" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/remote/webelement.d" afterPath="$PROJECT_DIR$/source/remote/webelement.d" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="erik.iws" />
@@ -37,8 +34,8 @@
       <file leaf-file-name="api.d" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/source/remote/api.d">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6792208" vertical-offset="752" max-vertical-offset="12512">
-              <caret line="75" column="36" selection-start-line="75" selection-start-column="36" selection-end-line="75" selection-end-column="36" />
+            <state vertical-scroll-proportion="0.5889047" vertical-offset="1201" max-vertical-offset="12291">
+              <caret line="95" column="0" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -47,7 +44,7 @@
       <file leaf-file-name="webelement.d" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/source/remote/webelement.d">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-64.22222" vertical-offset="0" max-vertical-offset="1972">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1734" max-vertical-offset="1972">
               <caret line="102" column="23" selection-start-line="102" selection-start-column="23" selection-end-line="102" selection-end-column="23" />
               <folding />
             </state>
@@ -59,11 +56,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="1307" max-vertical-offset="2040">
               <caret line="108" column="29" selection-start-line="108" selection-start-column="29" selection-end-line="108" selection-end-column="29" />
-              <folding>
-                <marker date="1453385779000" expanded="true" signature="95:634" placeholder="Condition (Class) ..." />
-                <marker date="1453385779000" expanded="true" signature="643:1224" placeholder="TitleIsCondition (Class) ..." />
-                <marker date="1453385779000" expanded="true" signature="824:1102" placeholder="isSatisfied (Function) ..." />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -71,8 +64,8 @@
       <file leaf-file-name="by.d" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/source/remote/by.d">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="236" max-vertical-offset="1445">
-              <caret line="38" column="40" selection-start-line="38" selection-start-column="40" selection-end-line="38" selection-end-column="40" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="916" max-vertical-offset="1649">
+              <caret line="85" column="39" selection-start-line="85" selection-start-column="39" selection-end-line="85" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -93,10 +86,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="1303" max-vertical-offset="2686">
               <caret line="94" column="5" selection-start-line="94" selection-start-column="5" selection-end-line="94" selection-end-column="5" />
-              <folding>
-                <marker date="1453385330000" expanded="true" signature="782:3381" placeholder="Driver (Class) ..." />
-                <marker date="1453385330000" expanded="true" signature="1783:2612" placeholder="doPost (Function) ..." />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -133,10 +123,9 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="2601" />
-    <option name="y" value="97" />
-    <option name="width" value="2210" />
-    <option name="height" value="1158" />
+    <option name="y" value="23" />
+    <option name="width" value="2222" />
+    <option name="height" value="1072" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -163,7 +152,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -220,6 +208,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -423,6 +412,27 @@
       <option name="usbDebugPort" value="7936" />
       <method />
     </configuration>
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
+      <module name="" />
+      <option name="TESTING_TYPE" value="0" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
     <configuration default="true" type="DLanguageRunDubConfiguration" factoryName="Build with DUB">
       <module name="" />
       <option name="additionalParams" />
@@ -452,27 +462,6 @@
       <option name="tfMainFile" />
       <option name="verbose" value="false" />
       <option name="workingDir" />
-      <method />
-    </configuration>
-    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
-      <module name="" />
-      <option name="TESTING_TYPE" value="0" />
-      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
-      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
-      <option name="PREFERRED_AVD" value="" />
-      <option name="USE_COMMAND_LINE" value="true" />
-      <option name="COMMAND_LINE" value="" />
-      <option name="WIPE_USER_DATA" value="false" />
-      <option name="DISABLE_BOOT_ANIMATION" value="false" />
-      <option name="NETWORK_SPEED" value="full" />
-      <option name="NETWORK_LATENCY" value="none" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
-      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
       <method />
     </configuration>
     <configuration default="true" type="BashConfigurationType" factoryName="Bash">
@@ -583,22 +572,6 @@
       <envs />
       <method />
     </configuration>
-    <configuration default="true" type="ScalaTestRunConfiguration" factoryName="ScalaTest">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <extension name="scalaCoverage" />
-      <module name="" />
-      <setting name="path" value="" />
-      <setting name="package" value="" />
-      <setting name="vmparams" value="" />
-      <setting name="params" value="" />
-      <setting name="workingDirectory" value="$PROJECT_DIR$" />
-      <setting name="searchForTest" value="Across module dependencies" />
-      <setting name="testName" value="" />
-      <setting name="testKind" value="Class" />
-      <setting name="showProgressMessages" value="true" />
-      <envs />
-      <method />
-    </configuration>
     <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
       <module name="" />
       <option name="ACTIVITY_CLASS" value="" />
@@ -617,6 +590,22 @@
       <option name="CLEAR_LOGCAT" value="false" />
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
       <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="ScalaTestRunConfiguration" factoryName="ScalaTest">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <extension name="scalaCoverage" />
+      <module name="" />
+      <setting name="path" value="" />
+      <setting name="package" value="" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workingDirectory" value="$PROJECT_DIR$" />
+      <setting name="searchForTest" value="Across module dependencies" />
+      <setting name="testName" value="" />
+      <setting name="testKind" value="Class" />
+      <setting name="showProgressMessages" value="true" />
+      <envs />
       <method />
     </configuration>
     <configuration default="false" name="Run DUB" type="DLanguageRunDubConfiguration" factoryName="Build with DUB">
@@ -668,6 +657,7 @@
       <updated>1453134245268</updated>
       <workItem from="1453134248624" duration="17332000" />
       <workItem from="1453219470340" duration="13105000" />
+      <workItem from="1453390257316" duration="5061000" />
     </task>
     <task id="LOCAL-00001" summary="updates">
       <created>1453144496357</created>
@@ -681,19 +671,25 @@
       <option name="project" value="LOCAL" />
       <updated>1453228807191</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="updates">
+      <created>1453388862942</created>
+      <option name="number" value="00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1453388862942</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32692000" />
+    <option name="totallyTimeSpent" value="38979000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="2601" y="97" width="2210" height="1158" extended-state="0" />
+    <frame x="0" y="23" width="2222" height="1072" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21816479" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21792261" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32958803" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -713,8 +709,8 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.122232474" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29026216" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.121559635" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24643585" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="PsiViewer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -770,10 +766,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="850" max-vertical-offset="2363">
           <caret line="83" column="36" selection-start-line="83" selection-start-column="36" selection-end-line="83" selection-end-column="36" />
-          <folding>
-            <marker date="1453385330000" expanded="true" signature="782:3381" placeholder="Driver (Class) ..." />
-            <marker date="1453385330000" expanded="true" signature="1783:2612" placeholder="doPost (Function) ..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -813,10 +806,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="850" max-vertical-offset="2363">
           <caret line="83" column="36" selection-start-line="83" selection-start-column="36" selection-end-line="83" selection-end-column="36" />
-          <folding>
-            <marker date="1453385330000" expanded="true" signature="782:3381" placeholder="Driver (Class) ..." />
-            <marker date="1453385330000" expanded="true" signature="1783:2612" placeholder="doPost (Function) ..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -856,10 +846,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="850" max-vertical-offset="2363">
           <caret line="83" column="36" selection-start-line="83" selection-start-column="36" selection-end-line="83" selection-end-column="36" />
-          <folding>
-            <marker date="1453385330000" expanded="true" signature="782:3381" placeholder="Driver (Class) ..." />
-            <marker date="1453385330000" expanded="true" signature="1783:2612" placeholder="doPost (Function) ..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -899,10 +886,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="850" max-vertical-offset="2363">
           <caret line="83" column="36" selection-start-line="83" selection-start-column="36" selection-end-line="83" selection-end-column="36" />
-          <folding>
-            <marker date="1453385330000" expanded="true" signature="782:3381" placeholder="Driver (Class) ..." />
-            <marker date="1453385330000" expanded="true" signature="1783:2612" placeholder="doPost (Function) ..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -942,10 +926,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="850" max-vertical-offset="2363">
           <caret line="83" column="36" selection-start-line="83" selection-start-column="36" selection-end-line="83" selection-end-column="36" />
-          <folding>
-            <marker date="1453385330000" expanded="true" signature="782:3381" placeholder="Driver (Class) ..." />
-            <marker date="1453385330000" expanded="true" signature="1783:2612" placeholder="doPost (Function) ..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -985,10 +966,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="850" max-vertical-offset="2363">
           <caret line="83" column="36" selection-start-line="83" selection-start-column="36" selection-end-line="83" selection-end-column="36" />
-          <folding>
-            <marker date="1453385330000" expanded="true" signature="782:3381" placeholder="Driver (Class) ..." />
-            <marker date="1453385330000" expanded="true" signature="1783:2612" placeholder="doPost (Function) ..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1028,10 +1006,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="850" max-vertical-offset="2363">
           <caret line="83" column="36" selection-start-line="83" selection-start-column="36" selection-end-line="83" selection-end-column="36" />
-          <folding>
-            <marker date="1453385330000" expanded="true" signature="782:3381" placeholder="Driver (Class) ..." />
-            <marker date="1453385330000" expanded="true" signature="1783:2612" placeholder="doPost (Function) ..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1071,10 +1046,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="850" max-vertical-offset="2363">
           <caret line="83" column="36" selection-start-line="83" selection-start-column="36" selection-end-line="83" selection-end-column="36" />
-          <folding>
-            <marker date="1453385330000" expanded="true" signature="782:3381" placeholder="Driver (Class) ..." />
-            <marker date="1453385330000" expanded="true" signature="1783:2612" placeholder="doPost (Function) ..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1114,10 +1086,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="850" max-vertical-offset="2363">
           <caret line="83" column="10" selection-start-line="83" selection-start-column="10" selection-end-line="83" selection-end-column="10" />
-          <folding>
-            <marker date="1453385330000" expanded="true" signature="782:3381" placeholder="Driver (Class) ..." />
-            <marker date="1453385330000" expanded="true" signature="1783:2612" placeholder="doPost (Function) ..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1141,10 +1110,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1303" max-vertical-offset="2686">
           <caret line="94" column="5" selection-start-line="94" selection-start-column="5" selection-end-line="94" selection-end-column="5" />
-          <folding>
-            <marker date="1453385330000" expanded="true" signature="782:3381" placeholder="Driver (Class) ..." />
-            <marker date="1453385330000" expanded="true" signature="1783:2612" placeholder="doPost (Function) ..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1158,7 +1124,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/source/remote/webelement.d">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-64.22222" vertical-offset="0" max-vertical-offset="1972">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1734" max-vertical-offset="1972">
           <caret line="102" column="23" selection-start-line="102" selection-start-column="23" selection-end-line="102" selection-end-column="23" />
           <folding />
         </state>
@@ -1168,26 +1134,22 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1307" max-vertical-offset="2040">
           <caret line="108" column="29" selection-start-line="108" selection-start-column="29" selection-end-line="108" selection-end-column="29" />
-          <folding>
-            <marker date="1453385779000" expanded="true" signature="95:634" placeholder="Condition (Class) ..." />
-            <marker date="1453385779000" expanded="true" signature="643:1224" placeholder="TitleIsCondition (Class) ..." />
-            <marker date="1453385779000" expanded="true" signature="824:1102" placeholder="isSatisfied (Function) ..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/source/remote/by.d">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="236" max-vertical-offset="1445">
-          <caret line="38" column="40" selection-start-line="38" selection-start-column="40" selection-end-line="38" selection-end-column="40" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="916" max-vertical-offset="1649">
+          <caret line="85" column="39" selection-start-line="85" selection-start-column="39" selection-end-line="85" selection-end-column="39" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/source/remote/api.d">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6792208" vertical-offset="752" max-vertical-offset="12512">
-          <caret line="75" column="36" selection-start-line="75" selection-start-column="36" selection-end-line="75" selection-end-column="36" />
+        <state vertical-scroll-proportion="0.5889047" vertical-offset="1201" max-vertical-offset="12291">
+          <caret line="95" column="0" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
           <folding />
         </state>
       </provider>

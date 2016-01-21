@@ -23,24 +23,22 @@ public class ByProvider : By
         this.value = value;
     }
 
-
     override public LocatorStrategy getStrategy()
     {
         return this.strategy;
     }
 
-
     override public string getValue()
     {
         return this.value;
     }
-    
-    override public string asString(){
-          return "locator:  " ~ strategy ~ ", value: " ~ value;
 
-        }
-    
-    
+    override public string asString()
+    {
+        return "locator:  " ~ strategy ~ ", value: " ~ value;
+
+    }
+
 }
 
 public static abstract class By
@@ -75,5 +73,19 @@ public static abstract class By
         return new ByProvider(LocatorStrategy.XPATH, value);
     }
 
-}
+    public static By linkText(string value)
+    {
+        return new ByProvider(LocatorStrategy.LINK_TEXT, value);
+    }
 
+    public static By partialLinkText(string value)
+    {
+        return new ByProvider(LocatorStrategy.PARTIAL_LINK_TEXT, value);
+    }
+
+    public static By name(string value)
+    {
+        return new ByProvider(LocatorStrategy.NAME, value);
+    }
+
+}

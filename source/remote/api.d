@@ -39,164 +39,144 @@ void main(string[] args)
 
     session.visitUrl("http://localhost:10270/cb/#login");
 
-
-
     session.waitFor(By.className("nav-state"),
         Condition.attributeContains("data-module-id", "viewmodels/login"));
 
-            WebElement username = session.findElement(By.className("cb-username"));
-            username.sendKeys("matt.cully@barclays.com");
-            writeln("username: ", username.getAttribute("value"));
+    WebElement username = session.findElement(By.className("cb-username"));
+    username.sendKeys("matt.cully@barclays.com");
+    writeln("username: ", username.getAttribute("value"));
 
-            WebElement password = session.findElement(By.className("cb-password"));
-            password.sendKeys("Password1");
-            writeln("password: ", password.getAttribute("value"));
+    WebElement password = session.findElement(By.className("cb-password"));
+    password.sendKeys("Password1");
+    writeln("password: ", password.getAttribute("value"));
 
-            WebElement loginButton = session.findElement(By.className("cb-login"));
-            session.waitFor(loginButton, Condition.isClickable());
-            loginButton.click();
+    WebElement loginButton = session.findElement(By.className("cb-login"));
+    session.waitFor(loginButton, Condition.isClickable());
+    loginButton.click();
 
-            session.waitFor(By.className("nav-state"),
-                Condition.attributeContains("data-module-id", "viewmodels/deals"));
+    session.waitFor(By.className("nav-state"),
+        Condition.attributeContains("data-module-id", "viewmodels/deals"));
 
-            // create deal if does not exist
-            if (!session.elementExists(By.xpath("//*[text()='CoolDeal']")))
-            {
-                WebElement dealNameInput = session.findElement(By.cssSelector("input"));
-                session.waitFor(dealNameInput, Condition.isClickable());
-                dealNameInput.sendKeys("CoolDeal");
-                WebElement createButton = session.findElement(By.xpath("//*[text()='Create new']"));
-                session.waitFor(createButton, Condition.isClickable());
-                createButton.click();
-            }
+    // create deal if does not exist
+    if (!session.elementExists(By.xpath("//*[text()='CoolDeal']")))
+    {
+        WebElement dealNameInput = session.findElement(By.cssSelector("input"));
+        session.waitFor(dealNameInput, Condition.isClickable());
+        dealNameInput.sendKeys("CoolDeal");
+        WebElement createButton = session.findElement(By.xpath("//*[text()='Create new']"));
+        session.waitFor(createButton, Condition.isClickable());
+        createButton.click();
+    }
 
-            WebElement detailsLink = session.findElement(By.xpath("//*[text()='CoolDeal']"));
-//            writeln(detailsLink.getName());
-            session.waitFor(detailsLink, Condition.isClickable());
-//             Thread.sleep(dur!("msecs")(2000));
-//            detailsLink.click();
-            Thread.sleep(dur!("msecs")(2000));
-            writeln(session.getTitle());
-            
+    WebElement detailsLink = session.findElement(By.xpath("//*[text()='CoolDeal']"));
+    session.waitFor(detailsLink, Condition.isClickable());
+    detailsLink.click();
 
-//            session.waitFor(By.className("nav-state"),
-//                Condition.attributeContains("data-module-id", "viewmodels/deal/deal-details/deal-details"));
+    session.waitFor(By.className("nav-state"),
+        Condition.attributeContains("data-module-id", "viewmodels/deal/deal-details/deal-details"));
 
-//            WebElement dealInput = session.findElement(By.cssSelector("input[name='deal-name']"));
-//            writeln(dealInput.getAttribute("value"));
+    WebElement dealInput = session.findElement(By.cssSelector("input[name='deal-name']"));
+    writeln(dealInput.getAttribute("value"));
 
-    // create person if does not exist
-    //    struct Person
-    //    {
-    //        string firstName;
-    //        string lastName;
-    //        public string fullName()
-    //        {
-    //            return firstName ~ " " ~ lastName;
-    //        }
-    //    }
-    //
-    //    Person david = Person("David", "Apple");
-    //
-    //    if (!session.elementExists(By.xpath("//*[text()='" ~ david.fullName() ~ "']")))
-    //    {
-    //        WebElement person = session.findElement(By.className("create-new-person"));
-    //        session.waitFor(person, Condition.isClickable());
-    //        person.click();
-    //
-    //        WebElement firstNameInput = session.findElement(By.cssSelector("input[name='first-name']"));
-    //        session.waitFor(firstNameInput, Condition.isClickable());
-    //        firstNameInput.sendKeys(david.firstName);
-    //
-    //        writeln(firstNameInput.getAttribute("value"));
-    //
-    //    }
+    // go to entity
+    WebElement entitiesLink = session.findElement(By.linkText("Entities"));
+    session.waitFor(entitiesLink, Condition.isClickable());
+    entitiesLink.click();
 
-    //    private def createPersonIfDoesNotExist(person: Person, page: Page) = {
-    //      if (!page.elementExists(By.xpath(s"//*[text()='${person.fullName}']"))) {
-    //        page.driver.clickOnEnabledButton(By.className("create-new-person"))
-    //        page.driver.fillInFormField(By.cssSelector("input[name='first-name']"), person.firstName)
-    //        page.driver.fillInFormField(By.cssSelector("input[name='last-name']"), person.lastName)
-    //        page.driver.fillInFormField(By.cssSelector("input[name='work-email']"), person.email)
-    //        page.driver.clickOnEnabledButton(By.className("cb-inline-person-done"))
-    //      }
-    //    }
+    // create entity if does not exist
+    if (!session.elementExists(By.xpath("//*[text()='CoolEntity']")))
+    {
+        WebElement entityNameInput = session.findElement(By.cssSelector("input"));
+        session.waitFor(entityNameInput, Condition.isClickable());
+        entityNameInput.sendKeys("CoolEntity");
+        WebElement createButton = session.findElement(By.xpath("//*[text()='Create new']"));
+        session.waitFor(createButton, Condition.isClickable());
+        createButton.click();
+    }
 
-    //    writeln(session.getTitle());
+    WebElement entityLink = session.findElement(By.xpath("//*[text()='CoolEntity']"));
+    session.waitFor(entityLink, Condition.isClickable());
+    entityLink.click();
 
-    //   Thread.sleep(dur!("msecs")(2000));
-    //    WebElement username = session.findElement(By.className("cb-username"));
-    //    username.sendKeys("matt.cully@barclays.com");
-    //
-    //    writeln(username.getAttribute("value"));
-    //
-    //    WebElement title = session.findElement(By.tagName("title"));
-    //    writeln(title.getAttribute("text"));
+    session.waitFor(By.className("nav-state"),
+        Condition.attributeContains("data-module-id",
+        "viewmodels/deal/entities/entity/about-your-business/about-your-business"));
 
-    //    WebElement username = session.findElement(By.className("cb-username"));
-    //    Thread.sleep(dur!("msecs")(50));
-    //    username.sendKeys("matt.cully@barclays.com");
-    //
-    //    WebElement password = session.findElement(By.className("cb-password"));
-    //    Thread.sleep(dur!("msecs")(50));
-    //    password.sendKeys("Password1");
-    //
-    //    writeln("username: ", username.getAttribute("value"));
-    //    writeln("password: ", password.getAttribute("value"));
-    //
-    //    WebElement loginButton = session.findElement(By.className("cb-login"));
-    //    Thread.sleep(dur!("msecs")(50));
-    //
-    //    writeln("text: ", loginButton.getText());
-    //
-    //    loginButton.click();
-    //
-    //    Thread.sleep(dur!("msecs")(1000));
-    //    writeln(session.getTitle());
-    //
-    //    WebElement dealLink = session.findElement(By.xpath("//*[text()='Common Ltd']"));
-    //    writeln(dealLink.getText());
-    //    dealLink.click();
-    //
-    //    Thread.sleep(dur!("msecs")(1000));
-    //
-    //    writeln(session.getTitle());
-    //
-    //    session.waitFor(By.tagName("title"), Condition.titleIs("Deal details | Corporate Banking"));
+    // nagivate to CoolDeal then People
+    WebElement dealsLink = session.findElement(By.xpath("//*[text()='CoolDeal']"));
+    session.waitFor(dealsLink, Condition.isClickable());
+    dealsLink.click();
 
-    //    session.waitFor(By.tagName("title"), Condition.titleIs("Deals | Corporate Banking"), 10);
+    session.waitFor(By.className("nav-state"),
+        Condition.attributeContains("data-module-id", "viewmodels/deal/deal-details/deal-details"));
 
-    //    writeln(ele.getAttribute("value"));
+    WebElement peopleLink = session.findElement(By.xpath("//*[text()='People']"));
+    session.waitFor(peopleLink, Condition.isClickable());
+    peopleLink.click();
 
-    //    session.takeScreenshot();
-    //    WebElement ele = session.getActiveElement();
+    session.waitFor(By.className("nav-state"),
+        Condition.attributeContains("data-module-id", "viewmodels/deal/people/people"));
 
-    //    session.goForward();
+    //create person if does not exist
+    if (!session.elementExists(By.xpath("//*[text()='David Json']")))
+    {
+        WebElement createButton = session.findElement(By.className("create-new-person"));
+        session.waitFor(createButton, Condition.isClickable());
+        createButton.click();
 
-    //    session.setTimeout(TimeoutType.IMPLICIT, 2000);
-    //    session.setAsyncScriptTimeout(2000);
-    //    session.getStatus();
-    //    session.create();
-    //    session.getCapabilities();
-    //    writeln(session.sessionId);
+        session.waitFor(By.cssSelector("input[name='first-name']"), Condition.isClickable());
+        session.findElement(By.cssSelector("input[name='first-name']")).sendKeys("David");
+        session.findElement(By.cssSelector("input[name='last-name']")).sendKeys("Json");
+        session.findElement(By.cssSelector("input[name='work-email']")).sendKeys(
+            "david.json@example.com");
+        WebElement createPersonButton = session.findElement(By.className("cb-inline-person-done"));
+        session.waitFor(createPersonButton, Condition.isClickable());
+        createPersonButton.click();
+    }
 
-    //    writeln(session.getSessions());
+    // navigate to CoolEntity from People
+    WebElement entitiesLink2 = session.findElement(By.xpath("//*[text()='Entities']"));
+    session.waitFor(entitiesLink2, Condition.isClickable());
+    entitiesLink2.click();
+    session.waitFor(By.className("nav-state"),
+        Condition.attributeContains("data-module-id", "viewmodels/deal/entities/entities"));
 
-    //    session.getWindowHandles();
-    //    session.visitUrl("http://www.autotrader.co.uk");
-    //    WebElement ele = session.findElement(LocatorStrategy.ID, "home");
-    //    WebElement ele = session.findElements(LocatorStrategy.CLASS_NAME, "mainNav-menu__item");
-    //    WebElement[] eles = session.findElements(LocatorStrategy.CLASS_NAME, "mainNav-menu__item");
-    //    writeln(eles[2].getText());
-    //    writeln(ele.elementId);
-    //    writeln(ele.getText());
-    //    session.getTitle();
-    //    session.getUrl();
-    //    session.getSource();
-    //    writeln(session.getSource().content);
-    //
+    WebElement coolEntityLink = session.findElement(By.xpath("//*[text()='CoolEntity']"));
+    session.waitFor(coolEntityLink, Condition.isClickable());
+    coolEntityLink.click();
+    session.waitFor(By.className("nav-state"),
+        Condition.attributeContains("data-module-id",
+        "viewmodels/deal/entities/entity/about-your-business/about-your-business"));
 
-    //        session.shutdown();
+    //navigate to key officials
+    WebElement keyOfficialsLink = session.findElement(By.xpath("//*[text()='Key officials']"));
+    session.waitFor(keyOfficialsLink, Condition.isClickable());
+    keyOfficialsLink.click();
+    session.waitFor(By.className("nav-state"),
+        Condition.attributeContains("data-module-id",
+        "viewmodels/deal/entities/entity/key-officials/key-officials"));
+
+    // delete existing people from key officials
+    if (session.elementExists(By.className("cb-clevel-clear")))
+    {
+        session.waitFor(By.className("cb-clevel-clear"), Condition.isClickable());
+        foreach (WebElement element; session.findElements(By.className("cb-clevel-clear")))
+        {
+            element.click();
+        }
+
+    }
+
+    // select person from dropdown 
+    string keyOfficialFirstName = "David";
+    string jquerySelector = ".cb-ceo .cb-people.selectized";
+    import std.string;
+
+    string script = format(`
+     var f=function(){ return $('%s')[0].selectize.setValue(_.find($('%s')[0].selectize.options, function(o){return o.firstName==='%s'}).id);};f();
+    `,
+        jquerySelector, jquerySelector, keyOfficialFirstName);
+    session.executeScript(script);
 
 }
 
@@ -234,6 +214,13 @@ class Session
         {
             create();
         }
+    }
+
+    ~this()
+    {
+        Pid pid = this.phantomTask.yieldForce();
+        kill(pid, SIGKILL);
+        assert(wait(pid) == -SIGKILL);
     }
 
     private void setPhantomTask(Task!(startPhantom, string[])* task)
@@ -628,7 +615,7 @@ class Session
         handleFailedRequest(sessionUrl, response);
     }
 
-    public void executeScript(string func, string[] args)
+    public void executeScript(string func, string[] args = [""])
     {
         auto executeDetails = RequestExecuteScript(func, args);
         JSONValue executeData = toJSON!RequestExecuteScript(executeDetails);
@@ -638,7 +625,7 @@ class Session
         writeln(response);
     }
 
-    public void executeAsyncScript(string func, string[] args)
+    public void executeAsyncScript(string func, string[] args = [""])
     {
         auto executeDetails = RequestExecuteScript(func, args);
         JSONValue executeData = toJSON!RequestExecuteScript(executeDetails);
