@@ -32,153 +32,8 @@ import erik.by;
 import erik.condition;
 import erik.webelement;
 import erik.logger;
-
-//void main(string[] args)
-//{
-//    Session session = Session.start();
-//
-//    session.visitUrl("http://localhost:10270/cb/#login");
-//
-//    session.waitFor(By.className("nav-state"),
-//        Condition.attributeContains("data-module-id", "viewmodels/login"));
-//
-//    WebElement username = session.findElement(By.className("cb-username"));
-//    username.sendKeys("matt.cully@barclays.com");
-//    writeln("username: ", username.getAttribute("value"));
-//
-//    WebElement password = session.findElement(By.className("cb-password"));
-//    password.sendKeys("Password1");
-//    writeln("password: ", password.getAttribute("value"));
-//
-//    WebElement loginButton = session.findElement(By.className("cb-login"));
-//    session.waitFor(loginButton, Condition.isClickable());
-//    loginButton.click();
-//
-//    session.waitFor(By.className("nav-state"),
-//        Condition.attributeContains("data-module-id", "viewmodels/deals"));
-//
-//    // create deal if does not exist
-//    if (!session.elementExists(By.xpath("//*[text()='CoolDeal']")))
-//    {
-//        WebElement dealNameInput = session.findElement(By.cssSelector("input"));
-//        session.waitFor(dealNameInput, Condition.isClickable());
-//        dealNameInput.sendKeys("CoolDeal");
-//        WebElement createButton = session.findElement(By.xpath("//*[text()='Create new']"));
-//        session.waitFor(createButton, Condition.isClickable());
-//        createButton.click();
-//    }
-//
-//    WebElement detailsLink = session.findElement(By.xpath("//*[text()='CoolDeal']"));
-//    session.waitFor(detailsLink, Condition.isClickable());
-//    detailsLink.click();
-//
-//    session.waitFor(By.className("nav-state"),
-//        Condition.attributeContains("data-module-id", "viewmodels/deal/deal-details/deal-details"));
-//
-//    WebElement dealInput = session.findElement(By.cssSelector("input[name='deal-name']"));
-//    writeln(dealInput.getAttribute("value"));
-//
-//    // go to entity
-//    WebElement entitiesLink = session.findElement(By.linkText("Entities"));
-//    session.waitFor(entitiesLink, Condition.isClickable());
-//    entitiesLink.click();
-//
-//    // create entity if does not exist
-//    if (!session.elementExists(By.xpath("//*[text()='CoolEntity']")))
-//    {
-//        WebElement entityNameInput = session.findElement(By.cssSelector("input"));
-//        session.waitFor(entityNameInput, Condition.isClickable());
-//        entityNameInput.sendKeys("CoolEntity");
-//        WebElement createButton = session.findElement(By.xpath("//*[text()='Create new']"));
-//        session.waitFor(createButton, Condition.isClickable());
-//        createButton.click();
-//    }
-//
-//    WebElement entityLink = session.findElement(By.xpath("//*[text()='CoolEntity']"));
-//    session.waitFor(entityLink, Condition.isClickable());
-//    entityLink.click();
-//
-//    session.waitFor(By.className("nav-state"),
-//        Condition.attributeContains("data-module-id",
-//        "viewmodels/deal/entities/entity/about-your-business/about-your-business"));
-//
-//    // nagivate to CoolDeal then People
-//    WebElement dealsLink = session.findElement(By.xpath("//*[text()='CoolDeal']"));
-//    session.waitFor(dealsLink, Condition.isClickable());
-//    dealsLink.click();
-//
-//    session.waitFor(By.className("nav-state"),
-//        Condition.attributeContains("data-module-id", "viewmodels/deal/deal-details/deal-details"));
-//
-//    WebElement peopleLink = session.findElement(By.xpath("//*[text()='People']"));
-//    session.waitFor(peopleLink, Condition.isClickable());
-//    peopleLink.click();
-//
-//    session.waitFor(By.className("nav-state"),
-//        Condition.attributeContains("data-module-id", "viewmodels/deal/people/people"));
-//
-//    //create person if does not exist
-//    if (!session.elementExists(By.xpath("//*[text()='David Json']")))
-//    {
-//        WebElement createButton = session.findElement(By.className("create-new-person"));
-//        session.waitFor(createButton, Condition.isClickable());
-//        createButton.click();
-//
-//        session.waitFor(By.cssSelector("input[name='first-name']"), Condition.isClickable());
-//        session.findElement(By.cssSelector("input[name='first-name']")).sendKeys("David");
-//        session.findElement(By.cssSelector("input[name='last-name']")).sendKeys("Json");
-//        session.findElement(By.cssSelector("input[name='work-email']")).sendKeys(
-//            "david.json@example.com");
-//        WebElement createPersonButton = session.findElement(By.className("cb-inline-person-done"));
-//        session.waitFor(createPersonButton, Condition.isClickable());
-//        createPersonButton.click();
-//    }
-//
-//    // navigate to CoolEntity from People
-//    WebElement entitiesLink2 = session.findElement(By.xpath("//*[text()='Entities']"));
-//    session.waitFor(entitiesLink2, Condition.isClickable());
-//    entitiesLink2.click();
-//    session.waitFor(By.className("nav-state"),
-//        Condition.attributeContains("data-module-id", "viewmodels/deal/entities/entities"));
-//
-//    WebElement coolEntityLink = session.findElement(By.xpath("//*[text()='CoolEntity']"));
-//    session.waitFor(coolEntityLink, Condition.isClickable());
-//    coolEntityLink.click();
-//    session.waitFor(By.className("nav-state"),
-//        Condition.attributeContains("data-module-id",
-//        "viewmodels/deal/entities/entity/about-your-business/about-your-business"));
-//
-//    //navigate to key officials
-//    WebElement keyOfficialsLink = session.findElement(By.xpath("//*[text()='Key officials']"));
-//    session.waitFor(keyOfficialsLink, Condition.isClickable());
-//    keyOfficialsLink.click();
-//    session.waitFor(By.className("nav-state"),
-//        Condition.attributeContains("data-module-id",
-//        "viewmodels/deal/entities/entity/key-officials/key-officials"));
-//
-//    // delete existing people from key officials
-//    if (session.elementExists(By.className("cb-clevel-clear")))
-//    {
-//        session.waitFor(By.className("cb-clevel-clear"), Condition.isClickable());
-//        foreach (WebElement element; session.findElements(By.className("cb-clevel-clear")))
-//        {
-//            element.click();
-//        }
-//
-//    }
-//
-//    // select person from dropdown
-//    string keyOfficialFirstName = "David";
-//    string jquerySelector = ".cb-ceo .cb-people.selectized";
-//    import std.string;
-//
-//    string script = format(`
-//     var f=function(){ return $('%s')[0].selectize.setValue(_.find($('%s')[0].selectize.options, function(o){return o.firstName==='%s'}).id);};f();
-//    `,
-//        jquerySelector, jquerySelector, keyOfficialFirstName);
-//    session.executeScript(script);
-//
-//}
+import erik.waitress;
+import erik.eventually;
 
 /**
  * Session:
@@ -250,8 +105,8 @@ class Session
         auto phantomTask = task!startPhantom(commands);
         session.setPhantomTask(phantomTask);
         phantomTask.executeInNewThread();
-        Thread.sleep(dur!("msecs")(1000));
-        session.create();
+        new Eventually().tryExecute(() { session.create(); });
+
         return session;
     }
 
@@ -267,6 +122,7 @@ class Session
         JSONValue sessionData = toJSON!RequestSession(sessionDetails);
 
         HttpResponse response = driver.doPost("/session", sessionData);
+        handleFailedRequest("/session", response);
 
         auto json = parseJSON(response.content);
         this.sessionId = json["sessionId"].str;
@@ -285,63 +141,12 @@ class Session
 
     public void waitFor(WebElement element, Condition condition, int timeout = 5000)
     {
-        int count = 0;
-        waitForElementResult(element, count, condition, timeout);
+        return new Waitress(this).waitFor(element, condition, timeout);
     }
 
     public void waitFor(By by, Condition condition, int timeout = 5000)
     {
-        int count = 0;
-        waitForResult(by, count, condition, timeout);
-    }
-
-    private void waitForResult(By by, int count, Condition condition, int timeout)
-    {
-        if (count >= timeout)
-        {
-            throw new TimeoutException(
-                "Timed out while waiting for condition: " ~ condition.asString() ~ " for: " ~ by.asString());
-        }
-        else
-        {
-            Thread.sleep(dur!("msecs")(100));
-            WebElement[] elements = findElements(by);
-            if (elements.length > 0 && condition.isSatisfied(elements))
-            {
-                return;
-            }
-            else
-            {
-                count = count + 100;
-                waitForResult(by, count, condition, timeout);
-            }
-
-        }
-    }
-
-    private void waitForElementResult(WebElement element, int count,
-        Condition condition, int timeout)
-    {
-        if (count >= timeout)
-        {
-            throw new TimeoutException(
-                "Timed out while waiting for condition: " ~ condition.asString() ~ " for: " ~ element.asString());
-        }
-        else
-        {
-            Thread.sleep(dur!("msecs")(100));
-            WebElement[] elements = [element];
-            if (condition.isSatisfied(elements))
-            {
-                return;
-            }
-            else
-            {
-                count = count + 100;
-                waitForElementResult(element, count, condition, timeout);
-            }
-
-        }
+        return new Waitress(this).waitFor(by, condition, timeout);
     }
 
     public bool elementExists(By by)
@@ -682,7 +487,7 @@ class Session
         handleFailedRequest(sessionUrl, response);
         ElementResponse elementResponse = parseJSON(response.content).fromJSON!ElementResponse;
         string elementId = elementResponse.value["ELEMENT"];
-        return new WebElement(elementId, sessionId, sessionUrl, driver);
+        return new WebElement(elementId, sessionId, sessionUrl, driver, this);
     }
 
     public WebElement[] findElements(By by)
@@ -693,7 +498,7 @@ class Session
         handleFailedRequest(sessionUrl, response);
         ElementResponses elementResponses = parseJSON(response.content).fromJSON!ElementResponses;
         return elementResponses.value.map!(e => new WebElement(e["ELEMENT"],
-            sessionId, sessionUrl, driver)).array;
+            sessionId, sessionUrl, driver, this)).array;
     }
 
     // why does this return "active" intead of an element?
@@ -704,7 +509,7 @@ class Session
         handleFailedRequest(elementUrl, response);
         ElementResponse elementResponse = parseJSON(response.content).fromJSON!ElementResponse;
         string elementId = elementResponse.value["ELEMENT"];
-        return new WebElement(elementId, sessionId, sessionUrl, driver);
+        return new WebElement(elementId, sessionId, sessionUrl, driver, this);
     }
 
 }

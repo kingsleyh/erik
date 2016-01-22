@@ -10,7 +10,7 @@
   "license": "BSL-1.0",
   "configurations": [
     {
-      "targetType": "library",
+      "targetType": "executable",
       "name": "library"
     }
   ],

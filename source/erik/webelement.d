@@ -17,6 +17,8 @@ import jsonizer.jsonize;
 
 import erik.model;
 import erik.driver;
+import erik.api;
+import erik.by;
 
 class WebElement
 {
@@ -25,13 +27,15 @@ class WebElement
     Driver driver;
     string sessionId;
     string sessionUrl;
+    Session session;
 
-    this(string elementId, string sessionId, string sessionUrl, Driver driver)
+    this(string elementId, string sessionId, string sessionUrl, Driver driver, Session session)
     {
         this.elementId = elementId;
         this.sessionId = sessionId;
         this.sessionUrl = sessionUrl ~ "/element/" ~ elementId;
         this.driver = driver;
+        this.session = session;
     }
 
     public string getText()
@@ -80,6 +84,10 @@ class WebElement
         BooleanResponse booleanResponse = parseJSON(response.content).fromJSON!BooleanResponse;
         return booleanResponse.value;
     }
+    
+    public bool isPresent(){
+     return isEnabled && isDisplayed();
+    }
 
     public string getName()
     {
@@ -98,6 +106,28 @@ class WebElement
 //        return stringResponse.value;
 //    }
 
+    public WebElement findElement(By by)
+    {
+        JSONValue apiElement = toJSON!RequestFindElement(
+            RequestFindElement(by.getStrategy(), by.getValue()));
+        HttpResponse response = driver.doPost(sessionUrl ~ "/element", apiElement);
+        handleFailedRequest(sessionUrl, response);
+        ElementResponse elementResponse = parseJSON(response.content).fromJSON!ElementResponse;
+        string _elementId = elementResponse.value["ELEMENT"];
+        return new WebElement(_elementId, sessionId, sessionUrl, driver, session);
+    }
+
+    public WebElement[] findElements(By by)
+    {
+        JSONValue apiElement = toJSON!RequestFindElement(
+            RequestFindElement(by.getStrategy(), by.getValue()));
+        HttpResponse response = driver.doPost(sessionUrl ~ "/elements", apiElement);
+        handleFailedRequest(sessionUrl, response);
+        ElementResponses elementResponses = parseJSON(response.content).fromJSON!ElementResponses;
+        return elementResponses.value.map!(e => new WebElement(e["ELEMENT"],
+            sessionId, sessionUrl, driver, session)).array;
+    }
+    
     public string asString()
     {
         return format(`
