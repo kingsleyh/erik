@@ -16,7 +16,6 @@ void handleFailedRequest(string url, HttpResponse response)
     }
 }
 
-
 class APIResponseError : Exception
 {
     this(string msg)
@@ -34,6 +33,14 @@ class DriverError : Exception
 }
 
 class IllegalArgumentException : Exception
+{
+    this(string msg)
+    {
+        super(msg);
+    }
+}
+
+class IncorrectElementException : Exception
 {
     this(string msg)
     {
@@ -99,9 +106,9 @@ class Driver
         auto client = HTTP(phantomServer ~ url);
 
         client.method = HTTP.Method.post;
-        
+
         //writeln(to!string(value));
-        
+
         client.setPostData(to!string(value), "application/json");
         client.onReceive = (ubyte[] data) {
             responseBody ~= cast(const(char)[]) data;

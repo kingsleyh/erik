@@ -45,7 +45,16 @@ class WebElement
 
     public TextInput toTextInput()
     {
+        if (!isTextInput())
+        {
+            throw new IncorrectElementException(
+                "WebElement was not a TextInput. It is a: " ~ getName());
+        }
         return new TextInput(elementId, sessionId, sessionUrl, driver, session);
+    }
+
+    private bool isTextInput(){
+      return getName() == "input" && getAttribute("type") == "text";
     }
 
     public string getText()
