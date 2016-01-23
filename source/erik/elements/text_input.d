@@ -6,6 +6,8 @@ import erik.webelement;
 import erik.condition;
 import erik.by;
 
+import std.stdio;
+
 class TextInput : WebElement
 {
 
@@ -16,13 +18,13 @@ class TextInput : WebElement
 
     public string getValue()
     {
-        session.waitFor(cast(WebElement) this, Condition.isClickable());
+        waitFor(cast(WebElement) this, Condition.isClickable());
         return getAttribute("value");
     }
 
     public void setValue(string value)
     {
-        session.waitFor(cast(WebElement) this, Condition.isClickable());
+        waitFor(cast(WebElement) this, Condition.isClickable());
         sendKeys(value);
     }
 }
