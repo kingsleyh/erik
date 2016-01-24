@@ -21,6 +21,7 @@ import erik.api;
 import erik.by;
 import erik.condition;
 import erik.waitress;
+import erik.keys;
 import erik.elements.text_input;
 
 class WebElement
@@ -53,8 +54,9 @@ class WebElement
         return new TextInput(elementId, sessionId, sessionUrl, driver, session);
     }
 
-    private bool isTextInput(){
-      return getName() == "input" && getAttribute("type") == "text";
+    private bool isTextInput()
+    {
+        return getName() == "input" && getAttribute("type") == "text";
     }
 
     public string getText()
@@ -73,12 +75,23 @@ class WebElement
         return stringResponse.value;
     }
 
-    public void sendKeys(string keys)
+    public WebElement sendKeys(string keys)
     {
         string[] val = keys.map!(to!string).array;
         JSONValue apiElement = toJSON!RequestSendKeys(RequestSendKeys(val));
         HttpResponse response = driver.doPost(elementSessionUrl ~ "/value", apiElement);
         handleFailedRequest(elementSessionUrl, response);
+        return this;
+    }
+
+    public WebElement sendKeys(Keys key)
+    {
+        string stringKey = cast(string) key;
+        string[] val = [stringKey];
+        JSONValue apiElement = toJSON!RequestSendKeys(RequestSendKeys(val));
+        HttpResponse response = driver.doPost(elementSessionUrl ~ "/value", apiElement);
+        handleFailedRequest(elementSessionUrl, response);
+        return this;
     }
 
     public void click()

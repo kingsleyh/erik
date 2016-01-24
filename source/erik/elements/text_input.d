@@ -22,9 +22,10 @@ class TextInput : WebElement
         return getAttribute("value");
     }
 
-    public void setValue(string value)
+    public TextInput setValue(string value)
     {
         waitFor(cast(WebElement) this, Condition.isClickable());
         sendKeys(value);
+        return this;
     }
 }

@@ -239,11 +239,12 @@ class Session
     Potential Errors:
         NoSuchWindow - If the currently selected window has been closed.
     */
-    public void visitUrl(string url)
+    public Session visitUrl(string url)
     {
         JSONValue apiUrl = toJSON!RequestUrl(RequestUrl(url));
         HttpResponse response = driver.doPost(sessionUrl ~ "/url", apiUrl);
         handleFailedRequest(sessionUrl, response);
+        return this;
     }
 
     /*
