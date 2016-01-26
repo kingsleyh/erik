@@ -60,14 +60,15 @@ class Session
    Examples:
        Session session = new Session("http://localhost", 8910);
    */
-    this(string host, int port, bool deferCreate = false)
+    this(string host, int port, Capabilities desiredCapability,
+        Capabilities requiredCapability, bool deferCreate = false)
     {
         this.host = host;
         this.port = port;
         this.driver = new Driver(host, port);
         if (!deferCreate)
         {
-            create();
+            create(desiredCapability, requiredCapability);
         }
     }
 
@@ -93,19 +94,26 @@ class Session
         return address;
     }
 
-    public static Session start(string pathToPhantom = "/usr/local/bin/phantomjs",
+    public static Session start(Capabilities desiredCapability,
+        Capabilities requiredCapability,
+        PhantomJsOptions options = new PhantomJsOptions(),
+        string pathToPhantom = "/usr/local/bin/phantomjs",
         string host = "127.0.0.1", string phantomPort = getFreePort().toPortString)
     {
         immutable int intPort = to!int(phantomPort);
         string[] commands = [pathToPhantom, "--webdriver=" ~ host ~ ":" ~ phantomPort];
-        //        writeln(commands);
+        commands = commands ~ options.getOptions();
+        writeln(commands);
 
-        Session session = new Session(host, intPort, true);
+        Session session = new Session(host, intPort, desiredCapability, requiredCapability,
+            true);
 
         auto phantomTask = task!startPhantom(commands);
         session.setPhantomTask(phantomTask);
         phantomTask.executeInNewThread();
-        new Eventually().tryExecute(() { session.create(); });
+        new Eventually().tryExecute(() {
+            session.create(desiredCapability, requiredCapability);
+        });
 
         return session;
     }
@@ -115,10 +123,9 @@ class Session
         return spawnProcess(commands);
     }
 
-    protected void create()
+    protected void create(Capabilities desiredCapabilities, Capabilities requiredCapabilities)
     {
-        auto sessionDetails = RequestSession(Capabilities("phantomjs", "",
-            "MAC"), Capabilities("phantomjs", "", "MAC"));
+        auto sessionDetails = RequestSession(desiredCapabilities, requiredCapabilities);
         JSONValue sessionData = toJSON!RequestSession(sessionDetails);
 
         HttpResponse response = driver.doPost("/session", sessionData);

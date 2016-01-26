@@ -3,6 +3,10 @@ module erik.model;
 import jsonizer.fromjson;
 import jsonizer.tojson;
 import jsonizer.jsonize;
+import std.array;
+import std.string;
+import std.algorithm;
+import std.conv;
 
 struct RequestSession
 {
@@ -16,6 +20,25 @@ struct RequestSession
 
 }
 
+struct Proxy
+{
+    mixin JsonizeMe;
+
+    @jsonize
+    {
+        string proxyType;
+        string proxyAutoconfigUrl;
+        string ftpProxy;
+        string httpProxy;
+        string sslProxy;
+        string socksProxy;
+        string socksUsername;
+        string socksPassword;
+        string noProxy;
+    }
+
+}
+
 struct Capabilities
 {
     mixin JsonizeMe;
@@ -24,9 +47,83 @@ struct Capabilities
     {
         string browserName;
         string platform;
+        bool javascriptEnabled = true;
+        bool takeScreenshot = true;
+        bool handlesAlerts = true;
+        bool databaseEnabled = true;
+        bool locationContextEnabled = true;
+        bool applicationCacheEnabled = true;
+        bool browserConnectionEnabled = true;
+        bool cssSelectorsEnabled = true;
+        bool webStorageEnabled = true;
+        bool rotatable = true;
+        bool acceptSslCerts = true;
+        bool nativeEvents = true;
+        Proxy proxy;
     }
     @jsonize("version") string _version;
 
+}
+
+class PhantomJsOptions
+{
+
+    string cookiesFiles;
+    string diskCache;
+    string loadImages;
+    string ignoreSslErrors;
+    string webSecurity;
+    string sslProtocol;
+
+    string[] getOptions()
+    {
+        return [ignoreSslErrors, diskCache, loadImages, webSecurity, sslProtocol].filter!(
+            s => !s.empty).array;
+    }
+
+    PhantomJsOptions setCookiesFiles(string pathToCookiesFile)
+    {
+        this.cookiesFiles = "--cookies-file=" ~ pathToCookiesFile;
+        return this;
+    }
+
+    PhantomJsOptions setDiskCache(bool value)
+    {
+        this.diskCache = "--disk-cache=" ~ to!string(value);
+        return this;
+    }
+
+    PhantomJsOptions setLoadImages(bool value)
+    {
+        this.loadImages = "--load-images=" ~to!string(value);
+        return this;
+    }
+
+    PhantomJsOptions setIgnoreSslErrors(bool value)
+    {
+        this.ignoreSslErrors = "--ignore-ssl-errors=" ~ to!string(value);
+        return this;
+    }
+
+    PhantomJsOptions setWebSecurity(bool value)
+    {
+        this.webSecurity = "--web-security=" ~ to!string(value);
+        return this;
+    }
+
+    PhantomJsOptions setSslProtocol(SSLProtocol protocol)
+    {
+        this.sslProtocol = "--ssl-protocol=" ~ cast(string)(protocol);
+        return this;
+    }
+
+}
+
+enum SSLProtocol : string {
+  SSLV3 = "sslv3",
+  SSLV2 = "sslv2",
+  TLSV1 = "tlsv1",
+  ANY = "any"
 }
 
 struct RequestFindElement
@@ -59,7 +156,6 @@ struct RequestSendKeys
         string[] value;
     }
 }
-
 
 struct RequestElementClick
 {
@@ -265,4 +361,3 @@ struct RequestExecuteScript
     }
 
 }
-
