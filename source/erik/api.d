@@ -60,8 +60,8 @@ class Session
    Examples:
        Session session = new Session("http://localhost", 8910);
    */
-    this(string host, int port, Capabilities desiredCapability,
-        Capabilities requiredCapability, bool deferCreate = false)
+    this(string host, int port, Capabilities desiredCapability = Capabilities(),
+        Capabilities requiredCapability = Capabilities(), bool deferCreate = false)
     {
         this.host = host;
         this.port = port;
@@ -94,8 +94,8 @@ class Session
         return address;
     }
 
-    public static Session start(Capabilities desiredCapability,
-        Capabilities requiredCapability,
+    public static Session start(Capabilities desiredCapability = Capabilities(),
+        Capabilities requiredCapability = Capabilities(),
         PhantomJsOptions options = new PhantomJsOptions(),
         string pathToPhantom = "/usr/local/bin/phantomjs",
         string host = "127.0.0.1", string phantomPort = getFreePort().toPortString)
