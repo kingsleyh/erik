@@ -28,4 +28,11 @@ class TextInput : WebElement
         sendKeys(value);
         return this;
     }
+
+    public TextInput clearValue()
+    {
+        waitFor(cast(WebElement) this, Condition.isClickable());
+        clear();
+        return this;
+    }
 }

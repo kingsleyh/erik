@@ -167,6 +167,18 @@ struct RequestElementClick
     }
 }
 
+struct RequestElementClear
+{
+    mixin JsonizeMe;
+
+    @jsonize
+    {
+        string id;
+        string sessionId;
+    }
+}
+
+
 struct HttpResponse
 {
     int code;

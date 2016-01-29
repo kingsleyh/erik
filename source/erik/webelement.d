@@ -23,6 +23,8 @@ import erik.condition;
 import erik.waitress;
 import erik.keys;
 import erik.elements.text_input;
+import erik.elements.button;
+import erik.elements.link;
 
 class WebElement
 {
@@ -54,9 +56,38 @@ class WebElement
         return new TextInput(elementId, sessionId, sessionUrl, driver, session);
     }
 
+    public Button toButton()
+    {
+        if (!isButton())
+        {
+            throw new IncorrectElementException("WebElement was not a Button. It is a: " ~ getName());
+        }
+        return new Button(elementId, sessionId, sessionUrl, driver, session);
+    }
+
+    public Link toLink()
+    {
+        if (!isLink())
+        {
+            throw new IncorrectElementException("WebElement was not a Link. It is a: " ~ getName());
+        }
+        return new Link(elementId, sessionId, sessionUrl, driver, session);
+    }
+
     private bool isTextInput()
     {
-        return getName() == "input" && getAttribute("type") == "text";
+        return getName() == "input" && (getAttribute("type") == "text"
+            || getAttribute("type") == "password" || getAttribute("type") == "email");
+    }
+
+    private bool isButton()
+    {
+        return (getName() == "button" || (getName() == "input" && getAttribute("type") == "submit"));
+    }
+
+    private bool isLink()
+    {
+        return (getName() == "a");
     }
 
     public string getText()
@@ -98,6 +129,14 @@ class WebElement
     {
         JSONValue apiElement = toJSON!RequestElementClick(RequestElementClick(elementId));
         HttpResponse response = driver.doPost(elementSessionUrl ~ "/click", apiElement);
+        handleFailedRequest(elementSessionUrl, response);
+    }
+
+    public void clear()
+    {
+        JSONValue apiElement = toJSON!RequestElementClear(RequestElementClear(elementId,
+            sessionId));
+        HttpResponse response = driver.doPost(elementSessionUrl ~ "/clear", apiElement);
         handleFailedRequest(elementSessionUrl, response);
     }
 
