@@ -51,6 +51,7 @@ class Session
     string sessionUrl;
     Pid phantomPid;
     Task!(startPhantom, string[])* phantomTask;
+    int globalTimeout = 5000;
 
     /**
    Create a new PhantomJs session.
@@ -94,6 +95,16 @@ class Session
         return address;
     }
 
+    public void setGlobalTimeout(int value)
+    {
+        this.globalTimeout = value;
+    }
+
+    public int getGlobalTimeout()
+    {
+        return this.globalTimeout;
+    }
+
     public static Session start(Capabilities desiredCapability = Capabilities(),
         Capabilities requiredCapability = Capabilities(),
         PhantomJsOptions options = new PhantomJsOptions(),
@@ -111,7 +122,7 @@ class Session
         auto phantomTask = task!startPhantom(commands);
         session.setPhantomTask(phantomTask);
         phantomTask.executeInNewThread();
-        new Eventually().tryExecute(() {
+        new Eventually(10_000).tryExecute(() {
             session.create(desiredCapability, requiredCapability);
         });
 
@@ -146,14 +157,28 @@ class Session
 
     }
 
-    public void waitFor(WebElement element, Condition condition, int timeout = 5000)
+    // specify a timeout
+    public void waitFor(WebElement element, Condition condition, int timeout)
     {
-        return new Waitress(this).waitFor(element, condition, timeout);
+        new Waitress(this).waitFor(element, condition, timeout);
     }
 
-    public void waitFor(By by, Condition condition, int timeout = 5000)
+    // uses global timeout by default
+    public void waitFor(WebElement element, Condition condition)
     {
-        return new Waitress(this).waitFor(by, condition, timeout);
+        waitFor(element, condition, getGlobalTimeout());
+    }
+
+    // specify a timeout
+    public void waitFor(By by, Condition condition, int timeout)
+    {
+        new Waitress(this).waitFor(by, condition, timeout);
+    }
+
+    // uses global timeout by default
+    public void waitFor(By by, Condition condition)
+    {
+       waitFor(by, condition, getGlobalTimeout());
     }
 
     public bool elementExists(By by)

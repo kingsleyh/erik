@@ -19,13 +19,13 @@ class Waitress
         this.session = session;
     }
 
-    public void waitFor(WebElement element, Condition condition, int timeout = 5000)
+    public void waitFor(WebElement element, Condition condition, int timeout)
     {
         int count = 0;
         waitForElementResult(element, count, condition, timeout);
     }
 
-    public void waitFor(By by, Condition condition, int timeout = 5000)
+    public void waitFor(By by, Condition condition, int timeout)
     {
         int count = 0;
         waitForResult(by, count, condition, timeout);
