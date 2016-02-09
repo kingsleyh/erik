@@ -23,6 +23,7 @@ import erik.condition;
 import erik.waitress;
 import erik.keys;
 import erik.elements.text_input;
+import erik.elements.text_area;
 import erik.elements.button;
 import erik.elements.link;
 
@@ -56,6 +57,16 @@ class WebElement
         return new TextInput(elementId, sessionId, sessionUrl, driver, session);
     }
 
+    public TextArea toTextArea()
+    {
+        if (!isTextArea())
+        {
+            throw new IncorrectElementException(
+                "WebElement was not a TextArea. It is a: " ~ getName());
+        }
+        return new TextArea(elementId, sessionId, sessionUrl, driver, session);
+    }
+
     public Button toButton()
     {
         if (!isButton())
@@ -78,6 +89,11 @@ class WebElement
     {
         return getName() == "input" && (getAttribute("type") == "text"
             || getAttribute("type") == "password" || getAttribute("type") == "email");
+    }
+
+    private bool isTextArea()
+    {
+        return getName() == "textarea";
     }
 
     private bool isButton()
