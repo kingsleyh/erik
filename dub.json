@@ -10,8 +10,12 @@
   "license": "BSL-1.0",
   "configurations": [
     {
-      "targetType": "executable",
-      "name": "library"
+      "name": "erik",
+      "targetType": "library"
+    },
+    {
+      "name": "docs",
+      "targetType": "executable"
     }
   ],
   "homepage": "https://github.com/kingsleyh/erik",
@@ -20,7 +24,8 @@
   ],
   "dependencies": {
     "jsonizer": "~>0.5.2",
-    "rainbow": "~master"
+    "rainbow": "~master",
+    "docs4d": "0.0.1"
   },
   "name": "erik",
   "copyright": "Copyright (c) 2016 Kingsley Hendrickse. All rights reserved."
