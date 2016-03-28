@@ -53,14 +53,6 @@ class Session
     Task!(startPhantom, string[])* phantomTask;
     int globalTimeout = 5000;
 
-    /**
-   Create a new PhantomJs session.
-   Params:
-        host = host of phantomjs server
-        port = port of phantomjs server
-   Examples:
-       Session session = new Session("http://localhost", 8910);
-   */
     this(string host, int port, Capabilities desiredCapability = Capabilities(),
         Capabilities requiredCapability = Capabilities(), bool deferCreate = false)
     {
