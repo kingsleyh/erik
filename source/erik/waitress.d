@@ -9,6 +9,12 @@ import erik.model;
 import erik.api;
 import erik.driver;
 
+ struct Result
+{
+  bool outcome;
+  string message;
+}
+
 class Waitress
 {
 
@@ -29,6 +35,36 @@ class Waitress
     {
         int count = 0;
         waitForResult(by, count, condition, timeout);
+    }
+
+    public void waitFor(Result delegate() runnable, int timeout)
+    {
+      int count = 0;
+      waitForFunction(runnable, timeout, count);
+    }
+
+    private void waitForFunction(Result delegate() runnable, int timeout, int count)
+    {
+      immutable auto result = runnable();
+      if (count >= timeout)
+        {
+            throw new TimeoutException(
+                "Timed out while waiting for function to evaluate: \n" ~ result.message);
+        }
+        else
+        {
+            Thread.sleep(dur!("msecs")(100));
+            if (result.outcome)
+            {
+                return;
+            }
+            else
+            {
+                count = count + 100;
+                waitForFunction(runnable, timeout, count);
+            }
+
+      }
     }
 
     private void waitForResult(By by, int count, Condition condition, int timeout)

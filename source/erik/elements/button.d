@@ -22,4 +22,10 @@ class Button : WebElement
         super.click();
     }
 
+     public string getValue()
+     {
+        waitFor(cast(WebElement) this, Condition.isClickable());
+        return getAttribute("value");
+     }
+
 }

@@ -173,6 +173,36 @@ class Session
        waitFor(by, condition, getGlobalTimeout());
     }
 
+    // specify a timeout
+    public void waitForUrl(string expectedUrl, int timeout)
+    {
+      new Waitress(this).waitFor(waitForUrlFunction(expectedUrl, this), timeout);
+    }
+
+    // uses global timeout by default
+    public void waitForUrl(string expectedUrl)
+    {
+      new Waitress(this).waitFor(waitForUrlFunction(expectedUrl, this), getGlobalTimeout());
+    }
+
+    // specify a timeout
+    public void waitForFunction(Result delegate() runnable, int timeout){
+      new Waitress(this).waitFor(runnable, timeout);
+    }
+
+    // uses global timeout by default
+    public void waitForFunction(Result delegate() runnable){
+      new Waitress(this).waitFor(runnable, getGlobalTimeout());
+    }
+
+    private auto waitForUrlFunction(string expectedUrl, Session s){
+     return (){
+             auto actualUrl = s.getUrl();
+             auto outcome = expectedUrl == actualUrl;
+             return outcome ? Result(outcome, actualUrl) : Result(outcome, "Error: expected: " ~ expectedUrl ~ " but got: " ~ actualUrl);
+           };
+    }
+
     public bool elementExists(By by)
     {
         JSONValue apiElement = toJSON!RequestFindElement(
