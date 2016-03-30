@@ -22,4 +22,9 @@ class Link : WebElement
         super.click();
     }
 
+    override public string getText()
+    {
+       waitFor(cast(WebElement) this, Condition.isClickable());
+       return getAttribute("text");
+    }
 }

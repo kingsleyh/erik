@@ -8,12 +8,7 @@ import erik.webelement;
 import erik.model;
 import erik.api;
 import erik.driver;
-
- struct Result
-{
-  bool outcome;
-  string message;
-}
+import std.conv;
 
 class Waitress
 {
@@ -116,4 +111,25 @@ class Waitress
         }
     }
 
+}
+
+struct Expectation(A,B)
+{
+  string name;
+  A expected;
+  B actual;
+
+  string message(bool outcome) {
+    return outcome ? to!string(actual) : "Error - actual <" ~ name ~ ">: " ~ to!string(actual) ~ " was not expected: " ~ to!string(expected);
+  }
+
+  Result result(bool outcome){
+   return Result(outcome, message(outcome));
+  }
+}
+
+struct Result
+{
+  bool outcome;
+  string message;
 }
